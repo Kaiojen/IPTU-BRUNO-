@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VÉRTICE Engenharia Tributária | Auditoria Técnica de IPTU – Rio de Janeiro</title>
+    <meta name="description" content="Auditoria técnica e documental de IPTU para imóveis comerciais, industriais e corporativos no Rio de Janeiro. Identificamos inconsistências nos parâmetros de cálculo da prefeitura.">
+
+    <link rel="preconnect" href="https://api.fontshare.com">
+    <link href="https://api.fontshare.com/v2/css?f[]=outfit@300,400,500,600,700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: { 900: '#0f1419', 800: '#1a1a2e', 700: '#232336' },
+                        gold: { DEFAULT: '#D4AF37', hover: '#b5952f', light: 'rgba(212,175,55,0.1)' }
+                    },
+                    fontFamily: { sans: ['Outfit', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+        details[open] summary ~ * { animation: sweep .3s ease-in-out; }
+        @keyframes sweep { 0%{opacity:0;transform:translateY(-10px)} 100%{opacity:1;transform:translateY(0)} }
+
+        .glass-card {
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: #D4AF37;
+            box-shadow: 0 10px 30px -10px rgba(212,175,55,0.15);
+            transform: translateY(-4px);
+            background: rgba(255,255,255,0.05);
+        }
+
+        /* Calculator */
+        .calc-field {
+            width: 100%;
+            background: #0f1419;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 2px;
+            padding: 14px 16px;
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+        .calc-field:focus { border-color: #D4AF37; box-shadow: 0 0 0 1px #D4AF37; }
+        .calc-field::placeholder { color: rgba(255,255,255,0.25); }
+        .calc-field option { background: #1a1a2e; }
+
+        input:-webkit-autofill,
+        input:-webkit-autofill:focus {
+            -webkit-text-fill-color: white;
+            -webkit-box-shadow: 0 0 0px 1000px #0f1419 inset;
+        }
+
+        .result-card { display: none; }
+        .result-card.active { display: block; animation: sweep 0.4s ease; }
+
+        /* Progress bar animation */
+        @keyframes fillBar { from{width:0} to{width:var(--w)} }
+        .fill-anim { animation: fillBar 1s ease forwards; }
+
+        .stat-counter { font-variant-numeric: tabular-nums; }
+
+        /* Floating label for currency inputs */
+        .currency-wrap { position: relative; }
+        .currency-wrap::before {
+            content: 'R$';
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #D4AF37;
+            font-size: 0.85rem;
+            font-weight: 600;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .currency-wrap .calc-field { padding-left: 44px; }
+
+        .area-wrap { position: relative; }
+        .area-wrap::after {
+            content: 'm²';
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255,255,255,0.3);
+            font-size: 0.8rem;
+            pointer-events: none;
+        }
+        .area-wrap .calc-field { padding-right: 44px; }
+
+        /* Testimonial card */
+        .testimonial-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.07);
+            transition: border-color 0.3s;
+        }
+        .testimonial-card:hover { border-color: rgba(212,175,55,0.3); }
+
+        /* Step connector */
+        .step-connector { position: absolute; top: 40px; left: calc(50% + 40px); right: calc(-50% + 40px); height: 1px; background: linear-gradient(to right, rgba(212,175,55,0.4), rgba(212,175,55,0.1)); }
+
+        /* Pulse dot */
+        @keyframes pulse-ring { 0%{transform:scale(.8);opacity:.5} 70%{transform:scale(1.4);opacity:0} 100%{transform:scale(.8);opacity:0} }
+        .pulse-dot::before { content:''; position:absolute; inset:-6px; border-radius:50%; border:1px solid #D4AF37; animation: pulse-ring 2s ease-out infinite; }
+
+        /* Smooth number format */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type="number"] { -moz-appearance: textfield; }
+
+        .tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(212,175,55,0.08); border: 1px solid rgba(212,175,55,0.25); color: #D4AF37; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; padding: 4px 10px; border-radius: 2px; }
+
+        /* Hero grid */
+        .hero-grid { background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px); background-size: 4rem 4rem; mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, #000 10%, transparent 100%); }
+    </style>
+</head>
+
+<body class="bg-dark-900 text-gray-300 antialiased selection:bg-gold selection:text-dark-900">
+<div class="min-h-screen flex flex-col relative overflow-x-hidden">
+
+<!-- ═══════════════════════════════════════════════
+     HEADER
+═══════════════════════════════════════════════ -->
+<header class="fixed w-full top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-white/8">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-12">
+        <div class="flex justify-between items-center h-22 py-5">
+
+            <!-- LOGO -->
+            <a href="#" class="flex items-center gap-3 group">
+                <svg width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="19,2 36,34 2,34" fill="none" stroke="#D4AF37" stroke-width="1.5"/>
+                    <polygon points="19,9 30,30 8,30" fill="rgba(212,175,55,0.08)" stroke="#D4AF37" stroke-width="0.8"/>
+                    <line x1="19" y1="2" x2="19" y2="34" stroke="#D4AF37" stroke-width="0.6" stroke-dasharray="2 3" opacity="0.5"/>
+                    <circle cx="19" cy="19" r="2" fill="#D4AF37"/>
+                </svg>
+                <div>
+                    <span class="font-bold text-xl tracking-tight text-white leading-none">VÉRTICE</span>
+                    <span class="block text-[10px] text-gold uppercase tracking-[0.2em] font-medium leading-none mt-0.5">Engenharia Tributária</span>
+                </div>
+            </a>
+
+            <nav class="hidden lg:flex gap-10">
+                <a href="#triagem" class="text-sm font-medium text-gray-400 hover:text-gold transition-colors tracking-wide">Triagem Gratuita</a>
+                <a href="#analise" class="text-sm font-medium text-gray-400 hover:text-gold transition-colors tracking-wide">Diagnóstico</a>
+                <a href="#processo" class="text-sm font-medium text-gray-400 hover:text-gold transition-colors tracking-wide">Metodologia</a>
+                <a href="#autoridade" class="text-sm font-medium text-gray-400 hover:text-gold transition-colors tracking-wide">Expertise</a>
+            </nav>
+
+            <div class="hidden md:block">
+                <a href="#contato" class="inline-flex items-center justify-center px-7 py-3 border border-gold text-sm font-semibold text-gold hover:bg-gold hover:text-dark-900 transition-all duration-300 uppercase tracking-widest">
+                    Solicitar Análise
+                </a>
+            </div>
+
+            <!-- Mobile menu button -->
+            <button id="mobileMenuBtn" class="lg:hidden flex flex-col gap-1.5 p-2" aria-label="Menu">
+                <span class="w-6 h-0.5 bg-white"></span>
+                <span class="w-6 h-0.5 bg-white"></span>
+                <span class="w-4 h-0.5 bg-gold"></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Mobile Nav -->
+    <div id="mobileMenu" class="hidden lg:hidden bg-dark-800 border-t border-white/10 px-6 py-6 space-y-4">
+        <a href="#triagem" class="block text-gray-300 hover:text-gold py-2">Triagem Gratuita</a>
+        <a href="#analise" class="block text-gray-300 hover:text-gold py-2">Diagnóstico</a>
+        <a href="#processo" class="block text-gray-300 hover:text-gold py-2">Metodologia</a>
+        <a href="#autoridade" class="block text-gray-300 hover:text-gold py-2">Expertise</a>
+        <a href="#contato" class="block mt-4 text-center px-6 py-3 bg-gold text-dark-900 font-bold uppercase tracking-widest text-sm">Solicitar Análise</a>
+    </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════ -->
+<section class="relative pt-40 pb-24 lg:pt-52 lg:pb-32" style="background: radial-gradient(circle at top right, #1a1a2e 0%, #0f1419 60%);">
+    <div class="absolute inset-0 hero-grid pointer-events-none"></div>
+    <!-- Glow -->
+    <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-gold/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-12 relative z-10">
+        <div class="grid lg:grid-cols-12 gap-16 items-center">
+            <div class="lg:col-span-7">
+                <div class="inline-flex items-center gap-3 mb-8">
+                    <span class="w-10 h-[1px] bg-gold"></span>
+                    <span class="text-gold text-xs font-semibold uppercase tracking-[0.2em]">Consultoria Técnica · Rio de Janeiro</span>
+                </div>
+                <h1 class="text-5xl md:text-6xl lg:text-[4.5rem] font-bold text-white leading-[1.05] mb-8 tracking-tight">
+                    Seu IPTU pode estar<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-gold to-yellow-200">calculado incorretamente.</span>
+                </h1>
+                <p class="text-xl text-gray-400 mb-6 max-w-2xl font-light leading-relaxed">
+                    Realizamos auditoria técnica e documental de viabilidade para identificar inconsistências nos parâmetros de cálculo da Prefeitura do Rio de Janeiro. Precisão para patrimônios corporativos.
+                </p>
+                <p class="text-sm text-gold/80 mb-12 font-medium flex items-center gap-2">
+                    <iconify-icon icon="lucide:shield-check" class="text-base"></iconify-icon>
+                    Análise de viabilidade inicial sem compromisso
+                </p>
+                <div class="flex flex-col sm:flex-row gap-5">
+                    <a href="#triagem" class="inline-flex justify-center items-center gap-2 px-10 py-5 bg-gold text-dark-900 text-sm font-bold uppercase tracking-widest hover:bg-gold-hover transition-colors shadow-[0_0_30px_rgba(212,175,55,0.25)]">
+                        <iconify-icon icon="lucide:search" class="text-base"></iconify-icon>
+                        Verificar Meu IPTU Agora
+                    </a>
+                    <a href="https://wa.me/5521999999999" target="_blank" class="inline-flex justify-center items-center gap-2 px-10 py-5 border border-white/20 text-white text-sm font-bold uppercase tracking-widest hover:border-gold hover:text-gold transition-colors">
+                        <iconify-icon icon="mdi:whatsapp" class="text-base"></iconify-icon>
+                        Falar com Engenheiro
+                    </a>
+                </div>
+            </div>
+
+            <!-- Abstract Visual -->
+            <div class="hidden lg:block lg:col-span-5 relative">
+                <div class="relative w-full aspect-square">
+                    <div class="absolute inset-0 border-[0.5px] border-gold/20 rounded-full animate-[spin_60s_linear_infinite]"></div>
+                    <div class="absolute inset-4 border-[0.5px] border-white/10 rounded-full animate-[spin_40s_linear_infinite_reverse]"></div>
+                    <div class="absolute inset-8 border-[0.5px] border-gold/10 rounded-full animate-[spin_80s_linear_infinite]"></div>
+
+                    <div class="absolute inset-14 glass-card rounded-2xl flex flex-col items-center justify-center p-8 overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-gold/10 blur-[50px] rounded-full"></div>
+                        <svg width="48" height="48" viewBox="0 0 48 48" class="mb-5" fill="none">
+                            <polygon points="24,3 45,42 3,42" fill="none" stroke="#D4AF37" stroke-width="1.5"/>
+                            <polygon points="24,12 38,38 10,38" fill="rgba(212,175,55,0.07)" stroke="#D4AF37" stroke-width="0.8"/>
+                            <circle cx="24" cy="24" r="2.5" fill="#D4AF37"/>
+                        </svg>
+
+                        <div class="w-full space-y-4 relative z-10">
+                            <div class="flex justify-between text-xs font-mono mb-1">
+                                <span class="text-gray-400">Área Tributada</span>
+                                <span class="text-red-400">850 m²</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-dark-900 rounded-full overflow-hidden mb-3">
+                                <div class="w-full h-full bg-red-900/60 relative">
+                                    <div class="absolute left-0 top-0 h-full w-full bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.05)_25%,rgba(255,255,255,0.05)_50%,transparent_50%,transparent_75%,rgba(255,255,255,0.05)_75%)] bg-[length:16px_16px]"></div>
+                                </div>
+                            </div>
+                            <div class="flex justify-between text-xs font-mono">
+                                <span class="text-gray-400">Área Real Auditada</span>
+                                <span class="text-gold font-bold">620 m²</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-dark-900 rounded-full overflow-hidden">
+                                <div class="w-[73%] h-full bg-gold shadow-[0_0_10px_rgba(212,175,55,0.7)]"></div>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-white/10">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] uppercase tracking-widest text-gray-500">Diagnóstico</span>
+                                    <span class="tag">Divergência: 27%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     TRANSPARENCY BAR
+═══════════════════════════════════════════════ -->
+<div class="bg-dark-800 border-y border-white/5 py-4">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
+        <iconify-icon icon="lucide:shield-alert" class="text-gold text-xl flex-shrink-0"></iconify-icon>
+        <p class="text-sm text-gray-400 tracking-wide">
+            <span class="text-white font-medium">Princípio de Transparência:</span> Não comercializamos promessas de redução garantida. Nossa atuação é técnica e documental — se o imóvel estiver correto, informamos na triagem inicial.
+        </p>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SOCIAL PROOF — STATS
+═══════════════════════════════════════════════ -->
+<section class="py-20 bg-dark-900 border-b border-white/5">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-12">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4 divide-y md:divide-y-0 md:divide-x divide-white/8">
+            <div class="text-center pt-8 md:pt-0 md:px-8 first:pt-0">
+                <div class="text-4xl font-bold text-white mb-2 stat-counter">R$ 3,2M<span class="text-gold">+</span></div>
+                <p class="text-xs text-gray-500 uppercase tracking-widest">em divergências identificadas</p>
+            </div>
+            <div class="text-center pt-8 md:pt-0 md:px-8">
+                <div class="text-4xl font-bold text-white mb-2 stat-counter">310<span class="text-gold">+</span></div>
+                <p class="text-xs text-gray-500 uppercase tracking-widest">laudos técnicos emitidos</p>
+            </div>
+            <div class="text-center pt-8 md:pt-0 md:px-8">
+                <div class="text-4xl font-bold text-white mb-2 stat-counter">98<span class="text-gold">%</span></div>
+                <p class="text-xs text-gray-500 uppercase tracking-widest">de precisão técnica documentada</p>
+            </div>
+            <div class="text-center pt-8 md:pt-0 md:px-8">
+                <div class="text-4xl font-bold text-white mb-2 stat-counter">12<span class="text-gold">+</span></div>
+                <p class="text-xs text-gray-500 uppercase tracking-widest">anos de especialização em RJ</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     CALCULATOR — VERIFICAÇÃO PRELIMINAR
+═══════════════════════════════════════════════ -->
+<section id="triagem" class="py-32 bg-dark-800 border-b border-white/5 relative overflow-hidden">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-gold/4 rounded-full blur-[150px] pointer-events-none"></div>
+
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-12 relative z-10">
+
+        <!-- Header -->
+        <div class="text-center mb-14">
+            <div class="tag mx-auto mb-6">
+                <iconify-icon icon="lucide:zap" class="text-sm"></iconify-icon>
+                Triagem Técnica Gratuita
+            </div>
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
+                Seu IPTU merece uma<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-gold to-yellow-200">análise técnica?</span>
+            </h2>
+            <p class="text-lg text-gray-400 max-w-2xl mx-auto font-light leading-relaxed">
+                Preencha os dados básicos do seu imóvel e descubra em minutos se há indícios de inconsistência no cálculo da prefeitura. Antes de prometer qualquer coisa, verificamos se existe fundamento técnico real.
+            </p>
+        </div>
+
+        <!-- Calculator Card -->
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-dark-900 border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
+
+                <!-- Top bar -->
+                <div class="flex items-center justify-between px-8 py-4 border-b border-white/8 bg-dark-800/50">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2.5 h-2.5 rounded-full bg-red-500/70"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/70"></div>
+                        <div class="w-2.5 h-2.5 rounded-full bg-green-500/70"></div>
+                    </div>
+                    <span class="text-xs text-gold uppercase tracking-widest font-mono">VÉRTICE · Triagem_IPTU.v1</span>
+                    <div class="w-16"></div>
+                </div>
+
+                <div id="calcForm" class="p-8 lg:p-12">
+                    <div class="grid md:grid-cols-2 gap-6">
+
+                        <!-- Tipo de imóvel -->
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">Tipo do Imóvel <span class="text-gold">*</span></label>
+                            <select id="c_tipo" class="calc-field">
+                                <option value="">Selecione o tipo</option>
+                                <option value="residencial">Residencial</option>
+                                <option value="comercial">Comercial (Loja / Laje / Prédio)</option>
+                                <option value="galpao">Galpão Logístico / Industrial</option>
+                                <option value="condominio">Condomínio / Área Comum</option>
+                                <option value="terreno">Terreno Não Edificado</option>
+                                <option value="misto">Uso Misto</option>
+                            </select>
+                        </div>
+
+                        <!-- Município -->
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">Município <span class="text-gold">*</span></label>
+                            <select id="c_municipio" class="calc-field">
+                                <option value="">Selecione</option>
+                                <option value="rj">Rio de Janeiro – RJ (Capital)</option>
+                                <option value="outro">Outro município</option>
+                            </select>
+                        </div>
+
+                        <!-- Valor anual IPTU -->
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">Valor Anual do IPTU no Carnê <span class="text-gold">*</span></label>
+                            <div class="currency-wrap">
+                                <input type="number" id="c_iptu" placeholder="45.000" min="0" class="calc-field">
+                            </div>
+                        </div>
+
+                        <!-- Valor venal -->
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">Valor Venal Informado no Carnê <span class="text-gold">*</span></label>
+                            <div class="currency-wrap">
+                                <input type="number" id="c_venal" placeholder="1.800.000" min="0" class="calc-field">
+                            </div>
+                        </div>
+
+                        <!-- Área cadastrada -->
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">Área Cadastrada no Carnê</label>
+                            <div class="area-wrap">
+                                <input type="number" id="c_area_cad" placeholder="850" min="0" class="calc-field">
+                            </div>
+                        </div>
+
+                        <!-- Área real -->
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">Área Real Aproximada do Imóvel</label>
+                            <div class="area-wrap">
+                                <input type="number" id="c_area_real" placeholder="620" min="0" class="calc-field">
+                            </div>
+                        </div>
+
+                        <!-- Aumento brusco -->
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">Houve aumento brusco nos últimos 2 anos?</label>
+                            <select id="c_aumento" class="calc-field">
+                                <option value="">Selecione</option>
+                                <option value="sim">Sim, aumento significativo</option>
+                                <option value="nao">Não / estável</option>
+                                <option value="nsei">Não sei / não observei</option>
+                            </select>
+                        </div>
+
+                        <!-- Reforma / mudança de uso -->
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">Houve reforma, ampliação, demolição ou mudança de uso?</label>
+                            <select id="c_reforma" class="calc-field">
+                                <option value="">Selecione</option>
+                                <option value="sim">Sim</option>
+                                <option value="nao">Não</option>
+                                <option value="nsei">Não sei</option>
+                            </select>
+                        </div>
+
+                        <!-- Documentação -->
+                        <div class="md:col-span-2">
+                            <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">Você possui carnê, escritura/matrícula ou planta do imóvel?</label>
+                            <select id="c_docs" class="calc-field">
+                                <option value="">Selecione</option>
+                                <option value="sim">Sim, tenho todos</option>
+                                <option value="parcial">Tenho apenas parte</option>
+                                <option value="nao">Não tenho nenhum</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="calcError" class="hidden mt-4 text-sm text-red-400 flex items-center gap-2">
+                        <iconify-icon icon="lucide:alert-circle"></iconify-icon>
+                        <span>Preencha os campos obrigatórios: Tipo de imóvel, Município, Valor do IPTU e Valor Venal.</span>
+                    </div>
+
+                    <button onclick="runCalc()" class="mt-8 w-full py-5 bg-gold text-dark-900 text-sm font-bold uppercase tracking-widest hover:bg-gold-hover transition-colors flex items-center justify-center gap-3">
+                        <iconify-icon icon="lucide:search" class="text-lg"></iconify-icon>
+                        Verificar Indícios Técnicos
+                    </button>
+
+                    <p class="text-center text-xs text-gray-600 mt-4">
+                        Análise preliminar baseada nos dados informados · Sem cadastro · Sem compromisso
+                    </p>
+                </div>
+
+                <!-- ── RESULTS ── -->
+                <div id="calcResults" class="hidden">
+
+                    <!-- Outro município -->
+                    <div id="res_outro_municipio" class="result-card p-8 lg:p-12">
+                        <div class="flex items-start gap-5 mb-8">
+                            <div class="w-14 h-14 rounded-full bg-gray-800 border border-white/10 flex items-center justify-center flex-shrink-0">
+                                <iconify-icon icon="lucide:map-pin-off" class="text-2xl text-gray-400"></iconify-icon>
+                            </div>
+                            <div>
+                                <div class="tag mb-3">Fora da área de atuação</div>
+                                <h3 class="text-2xl font-bold text-white mb-3">Atendemos exclusivamente o município do Rio de Janeiro</h3>
+                                <p class="text-gray-400 leading-relaxed">Nossa especialização concentra-se na legislação específica do IPTU do Rio de Janeiro (Capital), que possui regras, alíquotas e normativas próprias que exigem domínio local aprofundado. Para outros municípios, recomendamos buscar consultoria especializada na legislação local.</p>
+                            </div>
+                        </div>
+                        <button onclick="resetCalc()" class="text-sm text-gold border border-gold/30 px-6 py-3 hover:bg-gold/10 transition-colors">← Refazer verificação</button>
+                    </div>
+
+                    <!-- Nível 1: Sem indício claro -->
+                    <div id="res_1" class="result-card p-8 lg:p-12">
+                        <div class="flex items-start gap-5 mb-8">
+                            <div class="w-14 h-14 rounded-full bg-blue-900/20 border border-blue-500/30 flex items-center justify-center flex-shrink-0">
+                                <iconify-icon icon="lucide:info" class="text-2xl text-blue-400"></iconify-icon>
+                            </div>
+                            <div>
+                                <div class="tag mb-3" style="color: #60a5fa; border-color: rgba(96,165,250,0.3); background: rgba(96,165,250,0.08);">Resultado Preliminar</div>
+                                <h3 class="text-2xl font-bold text-white mb-2">Sem indício claro pelos dados informados</h3>
+                                <p class="text-sm text-gray-500 mb-4">Os parâmetros básicos informados parecem internamente coerentes.</p>
+                                <p class="text-gray-400 leading-relaxed">Com base nas informações fornecidas, não identificamos divergências óbvias na relação entre valor do IPTU e valor venal. <strong class="text-white">Isso não significa, porém, que não existam inconsistências.</strong> Erros de tipologia, padrão construtivo, fator de depreciação e área de terreno são invisíveis nesta triagem — e são exatamente onde as divergências mais relevantes costumam se esconder.</p>
+                            </div>
+                        </div>
+                        <div class="bg-dark-800 border border-white/8 rounded-xl p-6 mb-8">
+                            <p class="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+                                <iconify-icon icon="lucide:lightbulb" class="text-gold"></iconify-icon>
+                                Mesmo sem indício nos dados básicos, vale uma conferência se:
+                            </p>
+                            <ul class="space-y-2 text-sm text-gray-400">
+                                <li class="flex items-start gap-2"><iconify-icon icon="lucide:chevron-right" class="text-gold mt-0.5 flex-shrink-0"></iconify-icon> O imóvel sofreu reforma ou mudança de uso nos últimos 5 anos</li>
+                                <li class="flex items-start gap-2"><iconify-icon icon="lucide:chevron-right" class="text-gold mt-0.5 flex-shrink-0"></iconify-icon> A planta aprovada difere do que está construído atualmente</li>
+                                <li class="flex items-start gap-2"><iconify-icon icon="lucide:chevron-right" class="text-gold mt-0.5 flex-shrink-0"></iconify-icon> O IPTU cresceu mais de 20% em um único ano</li>
+                            </ul>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="https://wa.me/5521999999999?text=Olá!%20Fiz%20a%20triagem%20no%20site%20e%20gostaria%20de%20enviar%20o%20carnê%20para%20conferência." target="_blank" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-green-600 hover:bg-green-700 text-white text-sm font-bold uppercase tracking-widest transition-colors">
+                                <iconify-icon icon="mdi:whatsapp" class="text-lg"></iconify-icon>
+                                Enviar Carnê para Conferência
+                            </a>
+                            <button onclick="resetCalc()" class="text-sm text-gold border border-gold/30 px-6 py-4 hover:bg-gold/10 transition-colors">← Refazer</button>
+                        </div>
+                    </div>
+
+                    <!-- Nível 2: Dados insuficientes -->
+                    <div id="res_2" class="result-card p-8 lg:p-12">
+                        <div class="flex items-start gap-5 mb-8">
+                            <div class="w-14 h-14 rounded-full bg-yellow-900/20 border border-yellow-500/30 flex items-center justify-center flex-shrink-0">
+                                <iconify-icon icon="lucide:file-search" class="text-2xl text-yellow-400"></iconify-icon>
+                            </div>
+                            <div>
+                                <div class="tag mb-3" style="color: #facc15; border-color: rgba(250,204,21,0.3); background: rgba(250,204,21,0.08);">Resultado Preliminar</div>
+                                <h3 class="text-2xl font-bold text-white mb-2">Precisamos de mais dados para concluir</h3>
+                                <p class="text-sm text-gray-500 mb-4">Com as informações enviadas, ainda não é possível apontar indício com segurança.</p>
+                                <p class="text-gray-400 leading-relaxed">O carnê do IPTU, a inscrição imobiliária e os dados do espelho cadastral são indispensáveis para uma análise mais segura. A triagem técnica completa exige confrontar os parâmetros informados com a base de dados da Prefeitura do Rio de Janeiro. Nossa equipe pode fazer essa verificação rapidamente.</p>
+                            </div>
+                        </div>
+                        <div id="findings_2" class="space-y-3 mb-8"></div>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="https://wa.me/5521999999999?text=Olá!%20Fiz%20a%20triagem%20no%20site%20e%20gostaria%20de%20falar%20com%20um%20especialista." target="_blank" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-green-600 hover:bg-green-700 text-white text-sm font-bold uppercase tracking-widest transition-colors">
+                                <iconify-icon icon="mdi:whatsapp" class="text-lg"></iconify-icon>
+                                Falar com Especialista
+                            </a>
+                            <button onclick="resetCalc()" class="text-sm text-gold border border-gold/30 px-6 py-4 hover:bg-gold/10 transition-colors">← Refazer</button>
+                        </div>
+                    </div>
+
+                    <!-- Nível 3: Possível inconsistência -->
+                    <div id="res_3" class="result-card p-8 lg:p-12">
+                        <div class="flex items-start gap-5 mb-8">
+                            <div class="w-14 h-14 rounded-full bg-orange-900/20 border border-orange-500/30 flex items-center justify-center flex-shrink-0 relative pulse-dot">
+                                <iconify-icon icon="lucide:triangle-alert" class="text-2xl text-orange-400"></iconify-icon>
+                            </div>
+                            <div>
+                                <div class="tag mb-3" style="color: #fb923c; border-color: rgba(251,146,60,0.3); background: rgba(251,146,60,0.08);">Resultado Preliminar</div>
+                                <h3 class="text-2xl font-bold text-white mb-2">Possível inconsistência identificada</h3>
+                                <p class="text-sm text-gray-500 mb-4">Os dados informados apresentam sinais que justificam uma análise técnica mais detalhada.</p>
+                                <p class="text-gray-400 leading-relaxed">Identificamos nos dados informados ao menos um ponto de atenção que pode indicar divergência no cadastro imobiliário. Isso não confirma erro definitivo — apenas que há fundamento técnico suficiente para avançarmos para uma análise documental completa.</p>
+                            </div>
+                        </div>
+                        <div id="findings_3" class="space-y-3 mb-8"></div>
+                        <!-- Pseudo calc display -->
+                        <div id="pseudoCalc3" class="hidden bg-dark-800 border border-white/8 rounded-xl p-6 mb-8 font-mono text-sm">
+                            <div class="text-gray-500 mb-3 text-xs">// Verificação preliminar de coerência</div>
+                            <div class="space-y-2" id="calcLines3"></div>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="#contato" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gold hover:bg-gold-hover text-dark-900 text-sm font-bold uppercase tracking-widest transition-colors">
+                                <iconify-icon icon="lucide:file-search-2" class="text-lg"></iconify-icon>
+                                Solicitar Análise Técnica
+                            </a>
+                            <a href="https://wa.me/5521999999999?text=Olá!%20A%20triagem%20do%20site%20indicou%20possível%20inconsistência%20no%20meu%20IPTU.%20Quero%20solicitar%20análise%20técnica." target="_blank" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-green-600 hover:bg-green-700 text-white text-sm font-bold uppercase tracking-widest transition-colors">
+                                <iconify-icon icon="mdi:whatsapp" class="text-lg"></iconify-icon>
+                                WhatsApp Agora
+                            </a>
+                            <button onclick="resetCalc()" class="text-sm text-gold border border-gold/30 px-6 py-4 hover:bg-gold/10 transition-colors">← Refazer</button>
+                        </div>
+                    </div>
+
+                    <!-- Nível 4: Alto potencial -->
+                    <div id="res_4" class="result-card p-8 lg:p-12">
+                        <div class="flex items-start gap-5 mb-8">
+                            <div class="w-14 h-14 rounded-full bg-gold/10 border border-gold/40 flex items-center justify-center flex-shrink-0 relative pulse-dot">
+                                <iconify-icon icon="lucide:flame" class="text-2xl text-gold"></iconify-icon>
+                            </div>
+                            <div>
+                                <div class="tag mb-3">Alto Potencial de Revisão</div>
+                                <h3 class="text-2xl font-bold text-white mb-2">Caso com forte potencial para análise técnica</h3>
+                                <p class="text-sm text-gray-500 mb-4">Sinais relevantes detectados. Recomendamos avançar para verificação técnica completa.</p>
+                                <p class="text-gray-400 leading-relaxed">Os dados informados apresentam múltiplos sinais de inconsistência que, com alta frequência, correspondem a divergências reais no cadastro da Prefeitura. O próximo passo é enviar o carnê e documentos básicos para que nossa equipe faça a confrontação técnica completa.</p>
+                            </div>
+                        </div>
+                        <div id="findings_4" class="space-y-3 mb-8"></div>
+                        <div id="pseudoCalc4" class="hidden bg-dark-900 border border-gold/20 rounded-xl p-6 mb-8 font-mono text-sm">
+                            <div class="flex justify-between items-center border-b border-white/10 pb-3 mb-4">
+                                <span class="text-gray-500 text-xs">// Triagem de coerência — VÉRTICE Eng. Tributária</span>
+                                <span class="tag text-[10px]">Revisão recomendada</span>
+                            </div>
+                            <div class="space-y-2" id="calcLines4"></div>
+                        </div>
+                        <div class="bg-gold/5 border border-gold/20 rounded-xl p-6 mb-8">
+                            <p class="text-gold font-semibold mb-2 flex items-center gap-2">
+                                <iconify-icon icon="lucide:clock"></iconify-icon>
+                                Próximo passo recomendado
+                            </p>
+                            <p class="text-gray-300 text-sm">Envie pelo WhatsApp: <strong>carnê do IPTU + inscrição imobiliária</strong>. Nossa equipe faz a triagem técnica documental e retorna em até 24h úteis com parecer preliminar.</p>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="https://wa.me/5521999999999?text=Olá!%20A%20triagem%20do%20site%20indicou%20ALTO%20POTENCIAL%20de%20revisão%20no%20meu%20IPTU.%20Quero%20enviar%20os%20documentos%20para%20análise." target="_blank" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-green-600 hover:bg-green-700 text-white text-sm font-bold uppercase tracking-widest transition-colors shadow-[0_0_20px_rgba(34,197,94,0.2)]">
+                                <iconify-icon icon="mdi:whatsapp" class="text-lg"></iconify-icon>
+                                Enviar Documentos pelo WhatsApp
+                            </a>
+                            <a href="#contato" class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gold hover:bg-gold-hover text-dark-900 text-sm font-bold uppercase tracking-widest transition-colors">
+                                Solicitar Análise Formal
+                            </a>
+                            <button onclick="resetCalc()" class="text-sm text-gold border border-gold/30 px-6 py-4 hover:bg-gold/10 transition-colors">← Refazer</button>
+                        </div>
+                    </div>
+
+                    <!-- Legal disclaimer sempre presente nos resultados -->
+                    <div class="px-8 lg:px-12 pb-8">
+                        <div class="border-t border-white/5 pt-6">
+                            <p class="text-xs text-gray-600 leading-relaxed">
+                                <strong class="text-gray-500">Aviso:</strong> Esta verificação é preliminar e baseada apenas nos dados informados pelo usuário. Ela não garante redução de IPTU, não substitui análise técnica documental e não representa decisão da Prefeitura. A viabilidade depende da conferência do carnê, dados cadastrais, documentos do imóvel e regras aplicáveis ao Município do Rio de Janeiro.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     INDICATORS — WHEN TO AUDIT
+═══════════════════════════════════════════════ -->
+<section id="analise" class="py-32 bg-dark-900 relative">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-12">
+        <div class="flex flex-col lg:flex-row justify-between items-end mb-20 gap-8">
+            <div class="max-w-2xl">
+                <h2 class="text-gold text-sm font-bold uppercase tracking-[0.2em] mb-4">Diagnóstico Primário</h2>
+                <h3 class="text-3xl md:text-5xl font-bold text-white tracking-tight">
+                    Quando solicitar uma<br>auditoria técnica?
+                </h3>
+            </div>
+            <p class="text-gray-400 max-w-lg leading-relaxed">
+                Inconsistências no cálculo do IPTU geralmente se escondem em detalhes cadastrais imperceptíveis ao proprietário. Identifique se o seu patrimônio se enquadra nesses cenários.
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="glass-card p-8 rounded-xl">
+                <div class="w-14 h-14 bg-dark-800 border border-white/10 rounded-lg flex items-center justify-center mb-8">
+                    <iconify-icon icon="lucide:bar-chart-2" class="text-2xl text-gold"></iconify-icon>
+                </div>
+                <h4 class="text-xl font-bold text-white mb-4">Divergência de Valor Venal</h4>
+                <p class="text-gray-400 text-sm leading-relaxed">Patrimônio com valores venais desproporcionais ou significativamente superiores aos padrões de mercado da região.</p>
+            </div>
+            <div class="glass-card p-8 rounded-xl">
+                <div class="w-14 h-14 bg-dark-800 border border-white/10 rounded-lg flex items-center justify-center mb-8">
+                    <iconify-icon icon="lucide:building-2" class="text-2xl text-gold"></iconify-icon>
+                </div>
+                <h4 class="text-xl font-bold text-white mb-4">Ativos Comerciais</h4>
+                <p class="text-gray-400 text-sm leading-relaxed">Shoppings, lojas e lajes corporativas frequentemente sofrem com erros na classificação de tipologia e uso no cadastro municipal.</p>
+            </div>
+            <div class="glass-card p-8 rounded-xl">
+                <div class="w-14 h-14 bg-dark-800 border border-white/10 rounded-lg flex items-center justify-center mb-8">
+                    <iconify-icon icon="lucide:factory" class="text-2xl text-gold"></iconify-icon>
+                </div>
+                <h4 class="text-xl font-bold text-white mb-4">Galpões Industriais</h4>
+                <p class="text-gray-400 text-sm leading-relaxed">Áreas de grande extensão são altamente suscetíveis a erros de cômputo entre área construída e área de terreno livre.</p>
+            </div>
+            <div class="glass-card p-8 rounded-xl">
+                <div class="w-14 h-14 bg-dark-800 border border-white/10 rounded-lg flex items-center justify-center mb-8">
+                    <iconify-icon icon="lucide:map" class="text-2xl text-gold"></iconify-icon>
+                </div>
+                <h4 class="text-xl font-bold text-white mb-4">Terrenos Não Edificados</h4>
+                <p class="text-gray-400 text-sm leading-relaxed">Lançamentos indevidos de taxa de coleta de lixo ou aplicação de alíquotas majoradas para terrenos sem benfeitorias.</p>
+            </div>
+        </div>
+
+        <!-- Mid-section CTA -->
+        <div class="mt-16 text-center">
+            <p class="text-gray-400 mb-6">Não sabe se seu imóvel se enquadra? Faça a triagem gratuita.</p>
+            <a href="#triagem" class="inline-flex items-center gap-2 px-10 py-4 border border-gold text-gold text-sm font-semibold uppercase tracking-widest hover:bg-gold hover:text-dark-900 transition-all duration-300">
+                <iconify-icon icon="lucide:search" class="text-base"></iconify-icon>
+                Verificar Meu IPTU
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     PARAMETERS — WHAT WE AUDIT
+═══════════════════════════════════════════════ -->
+<section class="py-32 bg-dark-800 border-y border-white/5 relative overflow-hidden">
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gold/4 rounded-full blur-[120px] pointer-events-none"></div>
+
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-12 relative z-10">
+        <div class="grid lg:grid-cols-2 gap-20 items-center">
+
+            <div>
+                <h2 class="text-3xl md:text-5xl font-bold text-white mb-8 tracking-tight">
+                    Parâmetros Técnicos<br><span class="text-gold font-light">Auditados</span>
+                </h2>
+                <p class="text-lg text-gray-400 mb-12 leading-relaxed">
+                    O cálculo do IPTU no Rio de Janeiro depende de múltiplas variáveis cadastrais. Analisamos sistematicamente cada parâmetro confrontando com a realidade física e documental do imóvel.
+                </p>
+
+                <div class="space-y-8">
+                    <div class="flex gap-6">
+                        <div class="w-12 h-12 flex-shrink-0 border border-gold/30 rounded-full flex items-center justify-center text-gold bg-gold/5 font-mono font-bold text-sm">01</div>
+                        <div>
+                            <h4 class="text-xl font-bold text-white mb-2">Área Construída (AC)</h4>
+                            <p class="text-gray-400 leading-relaxed">Confrontação entre a área física real (planta aprovada / levantamento) e a área total lançada no espelho cadastral da Prefeitura.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-6">
+                        <div class="w-12 h-12 flex-shrink-0 border border-gold/30 rounded-full flex items-center justify-center text-gold bg-gold/5 font-mono font-bold text-sm">02</div>
+                        <div>
+                            <h4 class="text-xl font-bold text-white mb-2">Tipologia e Padrão Construtivo</h4>
+                            <p class="text-gray-400 leading-relaxed">Verificação da classificação estrutural do imóvel, evitando enquadramentos indevidos em padrões de luxo quando não aplicável.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-6">
+                        <div class="w-12 h-12 flex-shrink-0 border border-gold/30 rounded-full flex items-center justify-center text-gold bg-gold/5 font-mono font-bold text-sm">03</div>
+                        <div>
+                            <h4 class="text-xl font-bold text-white mb-2">Idade e Fator de Vetustez</h4>
+                            <p class="text-gray-400 leading-relaxed">Auditoria da aplicação do fator de depreciação pela idade da construção, garantindo que o abatimento no valor venal esteja correto.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-6">
+                        <div class="w-12 h-12 flex-shrink-0 border border-gold/30 rounded-full flex items-center justify-center text-gold bg-gold/5 font-mono font-bold text-sm">04</div>
+                        <div>
+                            <h4 class="text-xl font-bold text-white mb-2">Alíquota e Uso Cadastrado</h4>
+                            <p class="text-gray-400 leading-relaxed">Verificação se a alíquota aplicada corresponde ao uso real do imóvel: residencial, comercial, misto, terreno ou industrial.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audit report visual -->
+            <div class="relative">
+                <div class="absolute inset-0 bg-gold/8 transform rotate-2 rounded-2xl"></div>
+                <div class="relative bg-dark-900 border border-white/10 rounded-2xl p-10 shadow-2xl">
+                    <div class="flex justify-between items-center border-b border-white/10 pb-6 mb-8">
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+                        </div>
+                        <span class="text-xs text-gold uppercase tracking-widest font-mono">Audit_Report_v2.pdf</span>
+                    </div>
+                    <div class="space-y-6 font-mono text-sm">
+                        <div>
+                            <p class="text-gray-500 mb-1 text-xs">[PARAM_01] AREA_CADASTRAL_PREFEITURA</p>
+                            <div class="flex justify-between items-center bg-dark-800 p-3 rounded">
+                                <span class="text-white text-xs">Valor Lançado:</span>
+                                <span class="text-red-400">1.240,00 m²</span>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 mb-1 text-xs">[PARAM_02] LEVANTAMENTO_TOPOGRAFICO</p>
+                            <div class="flex justify-between items-center bg-dark-800 p-3 rounded border border-gold/30">
+                                <span class="text-white text-xs">Valor Real Auditado:</span>
+                                <span class="text-gold font-bold">890,50 m²</span>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 mb-1 text-xs">[PARAM_03] TIPOLOGIA_CADASTRO</p>
+                            <div class="flex justify-between items-center bg-dark-800 p-3 rounded">
+                                <span class="text-white text-xs">Padrão Lançado:</span>
+                                <span class="text-red-400">Luxo (L)</span>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 mb-1 text-xs">[PARAM_04] TIPOLOGIA_REAL</p>
+                            <div class="flex justify-between items-center bg-dark-800 p-3 rounded border border-gold/30">
+                                <span class="text-white text-xs">Padrão Real:</span>
+                                <span class="text-gold font-bold">Médio-Alto (MA)</span>
+                            </div>
+                        </div>
+                        <div class="h-px w-full bg-white/10"></div>
+                        <div class="flex justify-between items-center p-2">
+                            <span class="text-gray-400 uppercase tracking-wider text-xs">Status Diagnóstico</span>
+                            <span class="text-white bg-gold/20 px-3 py-1 rounded text-xs border border-gold/50">DIVERGÊNCIA IDENTIFICADA</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     PROCESS — 4 STEPS
+═══════════════════════════════════════════════ -->
+<section id="processo" class="py-32 bg-dark-900">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-12">
+        <div class="text-center mb-24">
+            <h2 class="text-gold text-sm font-bold uppercase tracking-[0.2em] mb-4">Metodologia</h2>
+            <h3 class="text-3xl md:text-5xl font-bold text-white tracking-tight">Processo de Auditoria</h3>
+            <p class="text-gray-400 mt-6 max-w-xl mx-auto">Cada etapa é projetada para minimizar riscos e maximizar a precisão técnica do diagnóstico.</p>
+        </div>
+
+        <div class="grid md:grid-cols-4 gap-8 relative">
+            <div class="hidden md:block absolute top-10 left-[12%] right-[12%] h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent"></div>
+
+            <div class="relative z-10 flex flex-col items-center text-center">
+                <div class="w-20 h-20 bg-dark-900 border border-gold rounded-full flex items-center justify-center text-2xl font-light text-gold mb-8 shadow-[0_0_30px_rgba(212,175,55,0.2)] relative">
+                    01
+                    <div class="absolute -top-1 -right-1 w-4 h-4 bg-gold rounded-full text-dark-900 flex items-center justify-center">
+                        <iconify-icon icon="lucide:check" style="font-size: 10px;"></iconify-icon>
+                    </div>
+                </div>
+                <h4 class="text-xl font-bold text-white mb-4">Triagem Inicial</h4>
+                <p class="text-gray-400 text-sm leading-relaxed">Análise preliminar do espelho do IPTU e dados cadastrais básicos para avaliar viabilidade — sem compromisso e sem custo.</p>
+            </div>
+
+            <div class="relative z-10 flex flex-col items-center text-center">
+                <div class="w-20 h-20 bg-dark-900 border border-white/20 rounded-full flex items-center justify-center text-2xl font-light text-white mb-8 hover:border-gold transition-colors">02</div>
+                <h4 class="text-xl font-bold text-white mb-4">Auditoria Técnica</h4>
+                <p class="text-gray-400 text-sm leading-relaxed">Verificação profunda dos parâmetros físicos, legais e cadastrais confrontados com a legislação do Município do Rio de Janeiro.</p>
+            </div>
+
+            <div class="relative z-10 flex flex-col items-center text-center">
+                <div class="w-20 h-20 bg-dark-900 border border-white/20 rounded-full flex items-center justify-center text-2xl font-light text-white mb-8 hover:border-gold transition-colors">03</div>
+                <h4 class="text-xl font-bold text-white mb-4">Emissão de Parecer</h4>
+                <p class="text-gray-400 text-sm leading-relaxed">Relatório diagnóstico claro apontando fundamentos técnicos e memória de cálculo refeita para fundamentar a revisão.</p>
+            </div>
+
+            <div class="relative z-10 flex flex-col items-center text-center">
+                <div class="w-20 h-20 bg-dark-900 border border-white/20 rounded-full flex items-center justify-center text-2xl font-light text-white mb-8 hover:border-gold transition-colors">04</div>
+                <h4 class="text-xl font-bold text-white mb-4">Laudo e Estratégia</h4>
+                <p class="text-gray-400 text-sm leading-relaxed">Laudo técnico com ART (CREA) e orientação estratégica para instrução do processo administrativo ou judicial.</p>
+            </div>
+        </div>
+
+        <div class="mt-16 text-center">
+            <a href="#contato" class="inline-flex items-center gap-2 px-10 py-5 bg-gold text-dark-900 text-sm font-bold uppercase tracking-widest hover:bg-gold-hover transition-colors">
+                Iniciar Processo Agora
+                <iconify-icon icon="lucide:arrow-right" class="text-base"></iconify-icon>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     AUDIENCE & DELIVERABLES
+═══════════════════════════════════════════════ -->
+<section class="py-32 bg-dark-800 border-t border-white/5">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-12">
+        <div class="grid lg:grid-cols-2 gap-20">
+
+            <div>
+                <h3 class="text-3xl font-bold text-white mb-10 tracking-tight">Perfil de Atendimento</h3>
+                <div class="space-y-5">
+                    <div class="p-6 border border-white/5 rounded-xl hover:border-gold/50 transition-colors bg-white/[0.02] group">
+                        <div class="flex items-start gap-4">
+                            <iconify-icon icon="lucide:building-2" class="text-3xl text-gold flex-shrink-0 mt-1"></iconify-icon>
+                            <div>
+                                <h4 class="text-lg font-bold text-white mb-1">Condomínios e Administradoras</h4>
+                                <p class="text-gray-400 text-sm">Revisão estrutural de áreas comuns, garagens e terrenos de grande porte com múltiplas inscrições imobiliárias.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 border border-white/5 rounded-xl hover:border-gold/50 transition-colors bg-white/[0.02]">
+                        <div class="flex items-start gap-4">
+                            <iconify-icon icon="lucide:briefcase" class="text-3xl text-gold flex-shrink-0 mt-1"></iconify-icon>
+                            <div>
+                                <h4 class="text-lg font-bold text-white mb-1">Empresas e Indústrias</h4>
+                                <p class="text-gray-400 text-sm">Auditoria de portfólio imobiliário corporativo: lajes, galpões logísticos, unidades fabris e centros de distribuição.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 border border-white/5 rounded-xl hover:border-gold/50 transition-colors bg-white/[0.02]">
+                        <div class="flex items-start gap-4">
+                            <iconify-icon icon="lucide:landmark" class="text-3xl text-gold flex-shrink-0 mt-1"></iconify-icon>
+                            <div>
+                                <h4 class="text-lg font-bold text-white mb-1">Fundos e Investidores</h4>
+                                <p class="text-gray-400 text-sm">Due diligence imobiliária tributária e otimização de passivos fiscais em portfólios de FII e ativos imobiliários.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6 border border-white/5 rounded-xl hover:border-gold/50 transition-colors bg-white/[0.02]">
+                        <div class="flex items-start gap-4">
+                            <iconify-icon icon="lucide:home" class="text-3xl text-gold flex-shrink-0 mt-1"></iconify-icon>
+                            <div>
+                                <h4 class="text-lg font-bold text-white mb-1">Residencial Alto Padrão</h4>
+                                <p class="text-gray-400 text-sm">Imóveis de alto valor com IPTU elevado — cobertura, mansões, casas em condomínios fechados e apartamentos premium.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-dark-900 p-10 lg:p-14 rounded-2xl border border-white/10">
+                <h3 class="text-3xl font-bold text-white mb-4 tracking-tight">Entregáveis Técnicos</h3>
+                <p class="text-gray-400 mb-10 leading-relaxed">Nosso escopo foca na produção de provas materiais incontestáveis para fundamentação do pleito administrativo.</p>
+
+                <ul class="space-y-7">
+                    <li class="flex items-start gap-4">
+                        <iconify-icon icon="lucide:check-circle-2" class="text-xl text-gold mt-0.5 flex-shrink-0"></iconify-icon>
+                        <div>
+                            <h4 class="text-white font-semibold mb-1">Diagnóstico de Viabilidade Documental</h4>
+                            <p class="text-gray-500 text-sm">Análise do histórico cadastral versus realidade fática do imóvel.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-4">
+                        <iconify-icon icon="lucide:check-circle-2" class="text-xl text-gold mt-0.5 flex-shrink-0"></iconify-icon>
+                        <div>
+                            <h4 class="text-white font-semibold mb-1">Reestruturação da Memória de Cálculo</h4>
+                            <p class="text-gray-500 text-sm">Demonstrativo exato dos valores devidos conforme normas e alíquotas vigentes do Rio de Janeiro.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-4">
+                        <iconify-icon icon="lucide:check-circle-2" class="text-xl text-gold mt-0.5 flex-shrink-0"></iconify-icon>
+                        <div>
+                            <h4 class="text-white font-semibold mb-1">Laudo Técnico de Engenharia (ART/CREA)</h4>
+                            <p class="text-gray-500 text-sm">Documento com responsabilidade técnica comprovando divergências com respaldo legal e normativo.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-4">
+                        <iconify-icon icon="lucide:check-circle-2" class="text-xl text-gold mt-0.5 flex-shrink-0"></iconify-icon>
+                        <div>
+                            <h4 class="text-white font-semibold mb-1">Parecer Estratégico Consultivo</h4>
+                            <p class="text-gray-500 text-sm">Direcionamento claro para atuação administrativa — e orientação judicial quando necessário.</p>
+                        </div>
+                    </li>
+                </ul>
+
+                <a href="#contato" class="mt-10 w-full inline-flex items-center justify-center gap-2 py-4 bg-gold text-dark-900 text-sm font-bold uppercase tracking-widest hover:bg-gold-hover transition-colors">
+                    Solicitar Proposta
+                    <iconify-icon icon="lucide:arrow-right"></iconify-icon>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     TESTIMONIALS
+═══════════════════════════════════════════════ -->
+<section class="py-32 bg-dark-900">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-12">
+        <div class="text-center mb-20">
+            <h2 class="text-gold text-sm font-bold uppercase tracking-[0.2em] mb-4">Prova Social</h2>
+            <h3 class="text-3xl md:text-5xl font-bold text-white tracking-tight">O que nossos clientes<br>dizem sobre a VÉRTICE</h3>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+
+            <div class="testimonial-card rounded-2xl p-8">
+                <div class="flex items-center gap-1 mb-6">
+                    <iconify-icon icon="lucide:star" class="text-gold text-sm"></iconify-icon>
+                    <iconify-icon icon="lucide:star" class="text-gold text-sm"></iconify-icon>
+                    <iconify-icon icon="lucide:star" class="text-gold text-sm"></iconify-icon>
+                    <iconify-icon icon="lucide:star" class="text-gold text-sm"></iconify-icon>
+                    <iconify-icon icon="lucide:star" class="text-gold text-sm"></iconify-icon>
+                </div>
+                <blockquote class="text-gray-300 leading-relaxed mb-8 text-base">
+                    "A VÉRTICE identificou uma divergência de área construída de 28% no nosso galpão em Jacarepaguá. A área cadastrada na prefeitura era significativamente maior do que o que realmente existe. O laudo técnico foi impecável e nos deu o suporte necessário para o processo administrativo."
+                </blockquote>
+                <div class="flex items-center gap-4 border-t border-white/5 pt-6">
+                    <div class="w-12 h-12 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center text-gold font-bold text-lg">R</div>
+                    <div>
+                        <p class="text-white font-semibold">Ricardo M.</p>
+                        <p class="text-gray-500 text-sm">Diretor de Operações · Logística e Distribuição</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card rounded-2xl p-8 border-gold/20" style="border-color: rgba(212,175,55,0.15);">
+                <div class="flex items-center gap-1 mb-6">
+                    <iconify-icon icon="lucide:star" class="text-gold text-sm"></iconify-icon>
+                    <iconify-icon icon="lucide:star" class="text-gold text-sm"></iconify-icon>
+                    <iconify-icon icon="lucide:star" class="text-gold text-sm"></iconify-icon>
+                    <iconify-icon icon="lucide:star" class="text-gold text-sm"></iconify-icon>
+                    <iconify-icon icon="lucide:star" class="text-gold text-sm"></iconify-icon>
+                </div>
+                <blockquote class="text-gray-300 leading-relaxed mb-8 text-base">
+                    "Administro um condomínio de 3 torres no Barra da Tijuca. A triagem inicial identificou que a classificação de tipologia das áreas comuns estava errada há anos. A equipe da VÉRTICE foi extremamente profissional e o relatório foi completo e bem fundamentado."
+                </blockquote>
+                <div class="flex items-center gap-4 border-t border-white/5 pt-6">
+                    <div class="w-12 h-12 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center text-gold font-bold text-lg">A</div>
+                    <div>
+                        <p class="text-white font-semibold">Ana Paula S.</p>
+                        <p class="text-gray-500 text-sm">Gestora de Condomínio · Barra da Tijuca – RJ</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card rounded-2xl p-8">
+                <div class="flex items-center gap-1 mb-6">
+                    <iconify-icon icon="lucide:star" class="text-gold text-sm"></iconify-icon>
+                    <iconify-icon icon="lucide:star" class="text-gold text-sm"></iconify-icon>
+                    <iconify-icon icon="lucide:star" class="text-gold text-sm"></iconify-icon>
+                    <iconify-icon icon="lucide:star" class="text-gold text-sm"></iconify-icon>
+                    <iconify-icon icon="lucide:star" class="text-gold text-sm"></iconify-icon>
+                </div>
+                <blockquote class="text-gray-300 leading-relaxed mb-8 text-base">
+                    "Minha laje comercial no Centro do Rio teve o IPTU reajustado de forma desproporcional. A VÉRTICE auditou o valor venal e o fator de depreciação — o imóvel tem mais de 40 anos e o cadastro não aplicava o coeficiente correto. Processo técnico sério do início ao fim."
+                </blockquote>
+                <div class="flex items-center gap-4 border-t border-white/5 pt-6">
+                    <div class="w-12 h-12 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center text-gold font-bold text-lg">F</div>
+                    <div>
+                        <p class="text-white font-semibold">Fernanda C.</p>
+                        <p class="text-gray-500 text-sm">Empresária · Proprietária Comercial · Centro – RJ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     AUTHORITY BANNER
+═══════════════════════════════════════════════ -->
+<section id="autoridade" class="py-24 bg-gold">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-12">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+            <div class="max-w-3xl">
+                <div class="inline-flex items-center gap-3 mb-6">
+                    <iconify-icon icon="lucide:award" class="text-dark-900 text-2xl"></iconify-icon>
+                    <span class="text-dark-900 font-bold uppercase tracking-widest text-sm">Rigor Técnico & Excelência</span>
+                </div>
+                <h3 class="text-3xl md:text-5xl font-bold text-dark-900 leading-tight mb-6 tracking-tight">
+                    Auditoria singular.<br>Zero teses genéricas.
+                </h3>
+                <p class="text-dark-800 text-lg leading-relaxed">
+                    Nosso diferencial repousa na engenharia de avaliações. Fundamentamos cada análise nas normas da ABNT aplicadas à legislação específica do Rio de Janeiro. Tratamos cada imóvel como um ativo único — porque ele é.
+                </p>
+                <a href="#triagem" class="mt-8 inline-flex items-center gap-2 px-8 py-4 bg-dark-900 text-white text-sm font-bold uppercase tracking-widest hover:bg-dark-800 transition-colors">
+                    Fazer Triagem Gratuita
+                    <iconify-icon icon="lucide:arrow-right"></iconify-icon>
+                </a>
+            </div>
+            <div class="flex gap-8 flex-shrink-0">
+                <div class="text-center">
+                    <div class="w-16 h-16 rounded-full border border-dark-900 flex items-center justify-center text-dark-900 text-2xl mb-3 mx-auto">
+                        <iconify-icon icon="lucide:hard-hat"></iconify-icon>
+                    </div>
+                    <p class="text-dark-900 font-bold text-xs uppercase tracking-wider">Engenharia<br>Avançada</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 rounded-full border border-dark-900 flex items-center justify-center text-dark-900 text-2xl mb-3 mx-auto">
+                        <iconify-icon icon="lucide:scale"></iconify-icon>
+                    </div>
+                    <p class="text-dark-900 font-bold text-xs uppercase tracking-wider">Conformidade<br>Legal</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 rounded-full border border-dark-900 flex items-center justify-center text-dark-900 text-2xl mb-3 mx-auto">
+                        <iconify-icon icon="lucide:shield-check"></iconify-icon>
+                    </div>
+                    <p class="text-dark-900 font-bold text-xs uppercase tracking-wider">ART/<br>CREA</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     FAQ
+═══════════════════════════════════════════════ -->
+<section class="py-32 bg-dark-900">
+    <div class="max-w-4xl mx-auto px-6 lg:px-12">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">Dúvidas Frequentes</h2>
+            <p class="text-gray-400">Esclarecimentos sobre nossa atuação técnica e consultiva.</p>
+        </div>
+
+        <div class="space-y-3">
+            <details class="bg-dark-800 border border-white/5 group" name="faq">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none p-6 text-white text-lg">
+                    <span>Vocês garantem que haverá redução no IPTU?</span>
+                    <span class="text-gold flex-shrink-0 ml-4">
+                        <iconify-icon icon="lucide:plus" class="text-xl group-open:hidden"></iconify-icon>
+                        <iconify-icon icon="lucide:minus" class="text-xl hidden group-open:block"></iconify-icon>
+                    </span>
+                </summary>
+                <div class="text-gray-400 text-base p-6 pt-0 leading-relaxed border-t border-white/5">
+                    <strong class="text-white">Não.</strong> A ética profissional e a natureza técnica do serviço não permitem garantir resultados financeiros. O que asseguramos é uma auditoria precisa. Se o imóvel estiver com parâmetros corretos, informamos ainda na triagem inicial — preservando seu tempo e recursos sem compromisso.
+                </div>
+            </details>
+
+            <details class="bg-dark-800 border border-white/5 group" name="faq">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none p-6 text-white text-lg">
+                    <span>Qual o custo da análise inicial?</span>
+                    <span class="text-gold flex-shrink-0 ml-4">
+                        <iconify-icon icon="lucide:plus" class="text-xl group-open:hidden"></iconify-icon>
+                        <iconify-icon icon="lucide:minus" class="text-xl hidden group-open:block"></iconify-icon>
+                    </span>
+                </summary>
+                <div class="text-gray-400 text-base p-6 pt-0 leading-relaxed border-t border-white/5">
+                    A triagem preliminar de viabilidade — análise do espelho do carnê e identificação de possíveis inconsistências grosseiras — é realizada sem custo e sem compromisso. A contratação de auditoria técnica profunda e emissão de laudos com ART envolve honorários acordados mediante proposta personalizada.
+                </div>
+            </details>
+
+            <details class="bg-dark-800 border border-white/5 group" name="faq">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none p-6 text-white text-lg">
+                    <span>Atendem apenas imóveis no Rio de Janeiro?</span>
+                    <span class="text-gold flex-shrink-0 ml-4">
+                        <iconify-icon icon="lucide:plus" class="text-xl group-open:hidden"></iconify-icon>
+                        <iconify-icon icon="lucide:minus" class="text-xl hidden group-open:block"></iconify-icon>
+                    </span>
+                </summary>
+                <div class="text-gray-400 text-base p-6 pt-0 leading-relaxed border-t border-white/5">
+                    Sim. Nosso foco de excelência concentra-se na legislação municipal do Rio de Janeiro (Capital). O IPTU possui regras, alíquotas e normativas específicas por município que exigem domínio local aprofundado — e é nesse mercado que nossa especialização é mais profunda.
+                </div>
+            </details>
+
+            <details class="bg-dark-800 border border-white/5 group" name="faq">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none p-6 text-white text-lg">
+                    <span>Quais documentos preciso para iniciar?</span>
+                    <span class="text-gold flex-shrink-0 ml-4">
+                        <iconify-icon icon="lucide:plus" class="text-xl group-open:hidden"></iconify-icon>
+                        <iconify-icon icon="lucide:minus" class="text-xl hidden group-open:block"></iconify-icon>
+                    </span>
+                </summary>
+                <div class="text-gray-400 text-base p-6 pt-0 leading-relaxed border-t border-white/5">
+                    Para a triagem inicial, basta o carnê de IPTU ou a notificação fiscal com a inscrição imobiliária. Para a auditoria completa, são necessários: carnê, escritura/matrícula, planta do imóvel (se disponível) e histórico de lançamentos dos últimos 5 anos. Quanto mais documentação, mais precisa é a análise.
+                </div>
+            </details>
+
+            <details class="bg-dark-800 border border-white/5 group" name="faq">
+                <summary class="flex justify-between items-center font-medium cursor-pointer list-none p-6 text-white text-lg">
+                    <span>Quanto tempo leva o processo completo?</span>
+                    <span class="text-gold flex-shrink-0 ml-4">
+                        <iconify-icon icon="lucide:plus" class="text-xl group-open:hidden"></iconify-icon>
+                        <iconify-icon icon="lucide:minus" class="text-xl hidden group-open:block"></iconify-icon>
+                    </span>
+                </summary>
+                <div class="text-gray-400 text-base p-6 pt-0 leading-relaxed border-t border-white/5">
+                    A triagem inicial é retornada em até 24h úteis após o envio do carnê. A auditoria técnica completa com emissão de laudo leva de 10 a 20 dias úteis, dependendo da complexidade do imóvel e da disponibilidade documental. O processo administrativo perante a Prefeitura segue prazos próprios da legislação municipal.
+                </div>
+            </details>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     FINAL CTA + FORM
+═══════════════════════════════════════════════ -->
+<section id="contato" class="py-32 bg-dark-800 border-t border-white/5">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-12">
+        <div class="grid lg:grid-cols-2 gap-20">
+
+            <div>
+                <div class="tag mb-8">Tratativa Executiva</div>
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
+                    Solicite uma análise<br>de viabilidade.
+                </h2>
+                <p class="text-xl text-gray-400 mb-10 font-light leading-relaxed">
+                    Tratativa confidencial para portfólios corporativos e proprietários exigentes. Nossa equipe retorna em até 24h úteis.
+                </p>
+
+                <div class="space-y-6 mb-10">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-dark-900 border border-white/10 flex items-center justify-center text-gold flex-shrink-0">
+                            <iconify-icon icon="mdi:whatsapp" class="text-xl"></iconify-icon>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">WhatsApp Direto</p>
+                            <a href="https://wa.me/5521999999999" target="_blank" class="text-white font-medium hover:text-gold transition-colors">(21) 99999-9999</a>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-dark-900 border border-white/10 flex items-center justify-center text-gold flex-shrink-0">
+                            <iconify-icon icon="lucide:mail" class="text-xl"></iconify-icon>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">E-mail Corporativo</p>
+                            <p class="text-white font-medium">contato@verticeiptu.com.br</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-dark-900 border border-white/10 flex items-center justify-center text-gold flex-shrink-0">
+                            <iconify-icon icon="lucide:map-pin" class="text-xl"></iconify-icon>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">Sede de Operações</p>
+                            <p class="text-white font-medium">Rio de Janeiro, RJ</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trust signals -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-dark-900 border border-white/5 p-4 rounded-lg text-center">
+                        <iconify-icon icon="lucide:lock" class="text-gold text-xl mb-2"></iconify-icon>
+                        <p class="text-xs text-gray-400">Sigilo<br>Corporativo</p>
+                    </div>
+                    <div class="bg-dark-900 border border-white/5 p-4 rounded-lg text-center">
+                        <iconify-icon icon="lucide:clock" class="text-gold text-xl mb-2"></iconify-icon>
+                        <p class="text-xs text-gray-400">Retorno em<br>24h Úteis</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <div class="glass-card p-10 lg:p-12 rounded-2xl">
+                <form id="contactForm" class="space-y-6" onsubmit="submitForm(event)">
+                    <div class="grid sm:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">Nome Completo <span class="text-gold">*</span></label>
+                            <input type="text" id="f_nome" required class="w-full bg-dark-900 border border-white/10 px-4 py-4 text-white focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors rounded-sm placeholder-gray-600" placeholder="Seu nome">
+                        </div>
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">Telefone / WhatsApp <span class="text-gold">*</span></label>
+                            <input type="tel" id="f_tel" required class="w-full bg-dark-900 border border-white/10 px-4 py-4 text-white focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors rounded-sm placeholder-gray-600" placeholder="(21) 99999-9999">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">E-mail</label>
+                        <input type="email" id="f_email" class="w-full bg-dark-900 border border-white/10 px-4 py-4 text-white focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors rounded-sm placeholder-gray-600" placeholder="seu@email.com.br">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">Perfil do Imóvel <span class="text-gold">*</span></label>
+                        <select id="f_tipo" required class="w-full bg-dark-900 border border-white/10 px-4 py-4 text-white focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors rounded-sm appearance-none">
+                            <option value="">Selecione o tipo de ativo</option>
+                            <option>Laje / Prédio Comercial</option>
+                            <option>Galpão Logístico / Industrial</option>
+                            <option>Condomínio / Área Comum</option>
+                            <option>Terreno Não Edificado</option>
+                            <option>Residencial Alto Padrão</option>
+                            <option>Portfólio (múltiplos imóveis)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-gray-400 mb-2">Mensagem (Opcional)</label>
+                        <textarea id="f_msg" rows="3" class="w-full bg-dark-900 border border-white/10 px-4 py-4 text-white focus:border-gold focus:ring-1 focus:ring-gold outline-none transition-colors rounded-sm resize-none placeholder-gray-600" placeholder="Descreva brevemente sua situação..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-5 bg-gold text-dark-900 text-sm font-bold uppercase tracking-widest hover:bg-gold-hover transition-colors flex items-center justify-center gap-2">
+                        <iconify-icon icon="lucide:send" class="text-base"></iconify-icon>
+                        Enviar Solicitação
+                    </button>
+                    <p class="text-xs text-gray-600 text-center">Suas informações são tratadas com absoluto sigilo corporativo.</p>
+                </form>
+
+                <!-- Success state -->
+                <div id="formSuccess" class="hidden text-center py-8">
+                    <div class="w-16 h-16 bg-gold/10 border border-gold/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <iconify-icon icon="lucide:check-circle-2" class="text-3xl text-gold"></iconify-icon>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3">Solicitação enviada!</h3>
+                    <p class="text-gray-400 mb-6">Nossa equipe entrará em contato em até 24h úteis. Para agilizar, envie o carnê do IPTU pelo WhatsApp.</p>
+                    <a href="https://wa.me/5521999999999?text=Olá!%20Acabei%20de%20enviar%20uma%20solicitação%20pelo%20site%20da%20VÉRTICE.%20Gostaria%20de%20enviar%20o%20carnê%20para%20análise." target="_blank" class="inline-flex items-center gap-2 px-8 py-4 bg-green-600 hover:bg-green-700 text-white text-sm font-bold uppercase tracking-widest transition-colors">
+                        <iconify-icon icon="mdi:whatsapp" class="text-lg"></iconify-icon>
+                        Enviar Carnê pelo WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════ -->
+<footer class="bg-dark-900 py-16 border-t border-white/10">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-12">
+        <div class="flex flex-col md:flex-row justify-between items-start gap-12 mb-12">
+
+            <div class="max-w-xs">
+                <div class="flex items-center gap-3 mb-4">
+                    <svg width="32" height="32" viewBox="0 0 38 38" fill="none">
+                        <polygon points="19,2 36,34 2,34" fill="none" stroke="#D4AF37" stroke-width="1.5"/>
+                        <polygon points="19,9 30,30 8,30" fill="rgba(212,175,55,0.08)" stroke="#D4AF37" stroke-width="0.8"/>
+                        <circle cx="19" cy="19" r="2" fill="#D4AF37"/>
+                    </svg>
+                    <div>
+                        <span class="font-bold text-lg text-white leading-none">VÉRTICE</span>
+                        <span class="block text-[9px] text-gold uppercase tracking-[0.2em]">Engenharia Tributária</span>
+                    </div>
+                </div>
+                <p class="text-gray-500 text-sm leading-relaxed">Auditoria técnica e documental de IPTU para imóveis corporativos, industriais e de alto padrão no Rio de Janeiro.</p>
+            </div>
+
+            <div>
+                <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Navegação</p>
+                <div class="space-y-2">
+                    <a href="#triagem" class="block text-gray-400 hover:text-gold text-sm transition-colors">Triagem Gratuita</a>
+                    <a href="#analise" class="block text-gray-400 hover:text-gold text-sm transition-colors">Diagnóstico</a>
+                    <a href="#processo" class="block text-gray-400 hover:text-gold text-sm transition-colors">Metodologia</a>
+                    <a href="#contato" class="block text-gray-400 hover:text-gold text-sm transition-colors">Contato</a>
+                </div>
+            </div>
+
+            <div>
+                <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Contato</p>
+                <div class="space-y-2">
+                    <p class="text-gray-400 text-sm">contato@verticeiptu.com.br</p>
+                    <p class="text-gray-400 text-sm">(21) 99999-9999</p>
+                    <p class="text-gray-400 text-sm">Rio de Janeiro, RJ</p>
+                </div>
+                <div class="flex gap-4 mt-6">
+                    <a href="#" class="text-gray-500 hover:text-gold transition-colors">
+                        <iconify-icon icon="mdi:linkedin" class="text-2xl"></iconify-icon>
+                    </a>
+                    <a href="#" class="text-gray-500 hover:text-gold transition-colors">
+                        <iconify-icon icon="mdi:instagram" class="text-2xl"></iconify-icon>
+                    </a>
+                    <a href="https://wa.me/5521999999999" target="_blank" class="text-gray-500 hover:text-gold transition-colors">
+                        <iconify-icon icon="mdi:whatsapp" class="text-2xl"></iconify-icon>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="h-px w-full bg-white/5 mb-8"></div>
+
+        <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-600">
+            <p>&copy; 2025 VÉRTICE Engenharia Tributária. Todos os direitos reservados.</p>
+            <div class="flex gap-6">
+                <a href="#" class="hover:text-white transition-colors">Política de Privacidade</a>
+                <a href="#" class="hover:text-white transition-colors">Termos de Uso</a>
+            </div>
+        </div>
+
+        <div class="mt-8 text-center">
+            <p class="text-xs text-gray-700 max-w-3xl mx-auto leading-relaxed">
+                Aviso Legal: O conteúdo deste site possui caráter meramente informativo e consultivo. A viabilidade de revisão tributária depende de análise casuística e não constitui promessa de resultado financeiro. A VÉRTICE Engenharia Tributária não é escritório de advocacia. Para aspectos jurídicos, consulte advogado de sua confiança.
+            </p>
+        </div>
+    </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════
+     FLOATING WHATSAPP
+═══════════════════════════════════════════════ -->
+<a href="https://wa.me/5521999999999?text=Olá!%20Vim%20pelo%20site%20da%20VÉRTICE%20e%20gostaria%20de%20saber%20mais%20sobre%20a%20análise%20de%20IPTU." target="_blank"
+   class="fixed bottom-8 right-8 z-50 flex items-center justify-center w-14 h-14 bg-dark-800 border border-gold rounded-full shadow-[0_0_20px_rgba(212,175,55,0.2)] text-gold hover:bg-gold hover:text-dark-900 transition-all duration-300 group">
+    <iconify-icon icon="mdi:whatsapp" class="text-3xl"></iconify-icon>
+    <span class="absolute right-full mr-4 whitespace-nowrap bg-dark-800 border border-white/10 text-white text-xs px-3 py-2 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+        Contato Direto
+    </span>
+</a>
+
+</div><!-- end wrapper -->
+
+<!-- ═══════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════ -->
+<script>
+// ── Mobile Menu ──────────────────────────────────────
+document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+    const menu = document.getElementById('mobileMenu');
+    menu.classList.toggle('hidden');
+});
+
+// Close mobile menu on link click
+document.querySelectorAll('#mobileMenu a').forEach(function(link) {
+    link.addEventListener('click', function() {
+        document.getElementById('mobileMenu').classList.add('hidden');
+    });
+});
+
+// ── Contact Form ──────────────────────────────────────
+function submitForm(e) {
+    e.preventDefault();
+    document.getElementById('contactForm').classList.add('hidden');
+    document.getElementById('formSuccess').classList.remove('hidden');
+}
+
+// ── CALCULATOR LOGIC ──────────────────────────────────
+/*
+  Rio de Janeiro IPTU – approximate base rates (SMFP/RJ):
+  Residential:    1.0% – 1.4%  (standard; up to 1.4% for higher value bands)
+  Commercial:     2.5%
+  Galpão/Ind:     1.5%  (industrial often lower due to depreciation)
+  Terrain:        3.0%  (higher due to "progressive" social function tax)
+  Mixed/Condo:    2.0%
+
+  We flag when actual IPTU differs from expected by > 30% (up or down).
+  Area divergence flags: > 10% = mild, > 20% = significant
+*/
+
+const RATES = {
+    residencial: 0.012,
+    comercial:   0.025,
+    galpao:      0.015,
+    condominio:  0.020,
+    terreno:     0.030,
+    misto:       0.020
+};
+
+function fmt(n) {
+    return n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function findingItem(icon, color, text) {
+    return `<div class="flex items-start gap-3 bg-dark-900 border border-white/5 rounded-lg p-4">
+        <iconify-icon icon="${icon}" class="text-xl flex-shrink-0 mt-0.5" style="color: ${color}"></iconify-icon>
+        <p class="text-sm text-gray-300 leading-relaxed">${text}</p>
+    </div>`;
+}
+
+function runCalc() {
+    const tipo      = document.getElementById('c_tipo').value;
+    const mun       = document.getElementById('c_municipio').value;
+    const iptu      = parseFloat(document.getElementById('c_iptu').value) || 0;
+    const venal     = parseFloat(document.getElementById('c_venal').value) || 0;
+    const areaCad   = parseFloat(document.getElementById('c_area_cad').value) || 0;
+    const areaReal  = parseFloat(document.getElementById('c_area_real').value) || 0;
+    const aumento   = document.getElementById('c_aumento').value;
+    const reforma   = document.getElementById('c_reforma').value;
+    const docs      = document.getElementById('c_docs').value;
+
+    // Validate required
+    if (!tipo || !mun || !iptu || !venal) {
+        document.getElementById('calcError').classList.remove('hidden');
+        return;
+    }
+    document.getElementById('calcError').classList.add('hidden');
+
+    // Scroll to results
+    document.getElementById('calcForm').classList.add('hidden');
+    document.getElementById('calcResults').classList.remove('hidden');
+
+    // Outro município
+    if (mun === 'outro') {
+        showResult('res_outro_municipio');
+        return;
+    }
+
+    // ── Score calculation ──
+    let score = 0;
+    let findings = [];
+    let calcLines = [];
+
+    // Check 1: IPTU vs expected (valor venal × alíquota)
+    const rate = RATES[tipo] || 0.020;
+    const expectedIPTU = venal * rate;
+    const pctDiff = ((iptu - expectedIPTU) / expectedIPTU) * 100;
+    const absDiff = Math.abs(pctDiff);
+
+    calcLines.push({ label: 'Valor Venal (carnê)', val: 'R$ ' + fmt(venal), neutral: true });
+    calcLines.push({ label: 'Alíquota estimada (' + tipo + ')', val: (rate * 100).toFixed(1) + '%', neutral: true });
+    calcLines.push({ label: 'IPTU esperado (base)', val: 'R$ ' + fmt(expectedIPTU), neutral: true });
+    calcLines.push({ label: 'IPTU informado', val: 'R$ ' + fmt(iptu), flag: absDiff > 30 });
+
+    if (absDiff > 50) {
+        score += 3;
+        findings.push(findingItem(
+            'lucide:triangle-alert', '#f97316',
+            '<strong class="text-white">Divergência expressiva no valor do IPTU:</strong> O valor anual informado difere em ' + Math.abs(pctDiff).toFixed(0) + '% do valor esperado com base no valor venal declarado e a alíquota estimada para ' + tipo + ' no Rio de Janeiro. Isso pode indicar erro no valor venal cadastrado, alíquota incorreta ou lançamento de taxas indevidas.'
+        ));
+    } else if (absDiff > 30) {
+        score += 2;
+        findings.push(findingItem(
+            'lucide:alert-circle', '#facc15',
+            '<strong class="text-white">Inconsistência moderada no valor do IPTU:</strong> O valor informado diverge ' + Math.abs(pctDiff).toFixed(0) + '% do esperado com base no valor venal. Pode haver componentes adicionais (TCL, multas, descontos) ou erro nos parâmetros cadastrais. Vale conferência técnica.'
+        ));
+    }
+
+    // Check 2: Area divergence
+    if (areaCad > 0 && areaReal > 0) {
+        const areaPct = ((areaCad - areaReal) / areaCad) * 100;
+        calcLines.push({ label: 'Área cadastrada', val: fmt(areaCad) + ' m²', neutral: true });
+        calcLines.push({ label: 'Área real informada', val: fmt(areaReal) + ' m²', flag: Math.abs(areaPct) > 10 });
+
+        if (areaPct > 20) {
+            score += 3;
+            findings.push(findingItem(
+                'lucide:ruler', '#f97316',
+                '<strong class="text-white">Divergência significativa de área (+' + areaPct.toFixed(0) + '%):</strong> A área cadastrada na Prefeitura é ' + areaPct.toFixed(0) + '% maior do que a área real informada. Essa é uma das causas mais comuns de cobrança indevida de IPTU — a confrontação técnica com planta aprovada é altamente recomendada.'
+            ));
+        } else if (areaPct > 10) {
+            score += 1;
+            findings.push(findingItem(
+                'lucide:ruler', '#facc15',
+                '<strong class="text-white">Diferença de área a verificar (' + areaPct.toFixed(0) + '%):</strong> A área cadastrada e a área real apresentam divergência que pode ser relevante dependendo do valor venal por m² aplicado. Recomendamos conferência documental.'
+            ));
+        } else if (areaPct < -10) {
+            score += 1;
+            findings.push(findingItem(
+                'lucide:ruler', '#facc15',
+                '<strong class="text-white">Área real maior que cadastrada:</strong> O imóvel pode ter tido ampliações não regularizadas. Isso é um ponto de atenção — a análise deve verificar o espelho cadastral completo antes de qualquer pedido de revisão.'
+            ));
+        }
+    }
+
+    // Check 3: Sudden increase
+    if (aumento === 'sim') {
+        score += 1;
+        calcLines.push({ label: 'Aumento brusco recente', val: 'Sim', flag: true });
+        findings.push(findingItem(
+            'lucide:trending-up', '#facc15',
+            '<strong class="text-white">Aumento brusco identificado:</strong> Variações abruptas podem estar relacionadas a recadastramento municipal, atualização do valor venal unitário da região, mudança de tipologia no sistema ou lançamentos retroativos. Cada causa tem tratamento técnico diferente.'
+        ));
+    }
+
+    // Check 4: Reform/change
+    if (reforma === 'sim') {
+        score += 1;
+        findings.push(findingItem(
+            'lucide:pencil-ruler', '#facc15',
+            '<strong class="text-white">Alteração física ou de uso:</strong> Reformas, ampliações, demolições ou mudanças de destinação nem sempre são atualizadas corretamente no cadastro municipal. A área e tipologia lançadas podem não refletir a realidade atual do imóvel.'
+        ));
+    }
+
+    // Check 5: No docs — informational
+    if (docs === 'nao' && score > 0) {
+        findings.push(findingItem(
+            'lucide:file-x', '#9ca3af',
+            '<strong class="text-white">Documentação não disponível:</strong> A análise técnica profunda depende do carnê, escritura e planta. Podemos orientar sobre como obter esses documentos junto à Prefeitura e ao Cartório de Registro de Imóveis.'
+        ));
+    }
+
+    // ── Determine level ──
+    let level;
+    if (score === 0) level = 1;
+    else if (score <= 1) level = 2;
+    else if (score <= 3) level = 3;
+    else level = 4;
+
+    // Inject findings
+    if (level >= 2) {
+        const fEl2 = document.getElementById('findings_2');
+        const fEl3 = document.getElementById('findings_3');
+        const fEl4 = document.getElementById('findings_4');
+        const html = findings.length > 0
+            ? findings.join('')
+            : findingItem('lucide:info', '#9ca3af', 'Para uma triagem mais precisa, envie o carnê do IPTU pelo WhatsApp. Identificamos padrões que exigem conferência documental.');
+
+        [fEl2, fEl3, fEl4].forEach(function(el) { if (el) el.innerHTML = html; });
+    }
+
+    // Inject calc lines
+    if (calcLines.length > 0 && level >= 3) {
+        const ids = ['calcLines3', 'calcLines4'];
+        ids.forEach(function(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.innerHTML = calcLines.map(function(l) {
+                const valColor = l.flag ? 'color: #f97316' : (l.neutral ? 'color: #D4AF37' : 'color: #86efac');
+                return '<div class="flex justify-between items-center py-1.5 border-b border-white/5">' +
+                    '<span class="text-gray-400 text-xs">' + l.label + '</span>' +
+                    '<span class="font-bold text-xs" style="' + valColor + '">' + l.val + '</span>' +
+                    '</div>';
+            }).join('');
+        });
+        document.getElementById('pseudoCalc3') && document.getElementById('pseudoCalc3').classList.remove('hidden');
+        document.getElementById('pseudoCalc4') && document.getElementById('pseudoCalc4').classList.remove('hidden');
+    }
+
+    showResult('res_' + level);
+
+    // Scroll to result
+    setTimeout(function() {
+        document.getElementById('calcResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+}
+
+function showResult(id) {
+    document.querySelectorAll('.result-card').forEach(function(el) {
+        el.classList.remove('active');
+    });
+    const target = document.getElementById(id);
+    if (target) target.classList.add('active');
+}
+
+function resetCalc() {
+    document.getElementById('calcForm').classList.remove('hidden');
+    document.getElementById('calcResults').classList.add('hidden');
+    document.querySelectorAll('.result-card').forEach(function(el) {
+        el.classList.remove('active');
+    });
+    // Reset form fields
+    ['c_tipo','c_municipio','c_aumento','c_reforma','c_docs'].forEach(function(id) {
+        document.getElementById(id).value = '';
+    });
+    ['c_iptu','c_venal','c_area_cad','c_area_real'].forEach(function(id) {
+        document.getElementById(id).value = '';
+    });
+    // Reset calc display elements
+    ['pseudoCalc3','pseudoCalc4'].forEach(function(id) {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+    });
+    document.getElementById('triagem').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ── Header scroll effect ──────────────────────────────
+window.addEventListener('scroll', function() {
+    const header = document.querySelector('header');
+    if (window.scrollY > 80) {
+        header.style.boxShadow = '0 4px 30px rgba(0,0,0,0.5)';
+    } else {
+        header.style.boxShadow = 'none';
+    }
+});
+</script>
+
+</body>
+</html>
