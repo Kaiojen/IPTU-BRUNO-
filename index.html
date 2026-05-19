@@ -18,8 +18,8 @@
             theme: {
                 extend: {
                     colors: {
-                        dark: { 900: '#0f1419', 800: '#1a1a2e', 700: '#232336' },
-                        gold: { DEFAULT: '#D4AF37', hover: '#b5952f', light: 'rgba(212,175,55,0.1)' }
+                        dark: { 900: '#0f1419', 800: '#161c26', 700: '#1e2535' },
+                        gold: { DEFAULT: '#D4AF37', hover: '#b5952f' }
                     },
                     fontFamily: { sans: ['Outfit', 'sans-serif'] }
                 }
@@ -28,7 +28,7 @@
     </script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
 
-    <!-- Google Analytics 4 — substitua G-XXXXXXXXXX pelo ID real da sua conta GA4 -->
+    <!-- Google Analytics 4 — substitua G-XXXXXXXXXX pelo ID real -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -37,7 +37,7 @@
         gtag('config', 'G-XXXXXXXXXX');
     </script>
 
-    <!-- Meta Pixel — descomente e substitua PIXEL_ID quando for ativar
+    <!-- Meta Pixel — descomente e substitua PIXEL_ID quando ativar
     <script>
         !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
         n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
@@ -52,78 +52,87 @@
     -->
 
     <style>
+        /* ── Tag chip ────────────────────────────────── */
         .tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(212,175,55,0.08);
-            border: 1px solid rgba(212,175,55,0.25);
-            color: #D4AF37;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            padding: 4px 10px;
-            border-radius: 2px;
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(212,175,55,0.08); border: 1px solid rgba(212,175,55,0.25);
+            color: #D4AF37; font-size: 0.68rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.15em;
+            padding: 4px 12px; border-radius: 2px;
         }
 
+        /* ── Hero grid background ────────────────────── */
         .hero-grid {
             background-image:
-                linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+                linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
             background-size: 4rem 4rem;
-            mask-image: radial-gradient(ellipse 80% 80% at 50% 40%, #000 20%, transparent 100%);
+            mask-image: radial-gradient(ellipse 85% 80% at 50% 40%, #000 20%, transparent 100%);
         }
 
-        .block-card {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.08);
-            transition: border-color 0.3s ease;
-        }
-        .block-card:hover { border-color: rgba(212,175,55,0.3); }
-
-        .step-active {
-            border-color: #D4AF37;
-            color: #D4AF37;
-            box-shadow: 0 0 20px rgba(212,175,55,0.15);
-        }
-        .step-inactive {
-            border-color: rgba(255,255,255,0.15);
-            color: rgba(255,255,255,0.4);
-        }
-
+        /* ── WhatsApp button ─────────────────────────── */
         .wa-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            background: #16a34a;
-            color: #fff;
-            font-weight: 700;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            background: #16a34a; color: #fff;
+            font-weight: 700; font-size: 0.8rem;
+            text-transform: uppercase; letter-spacing: 0.12em;
             transition: background 0.2s ease;
         }
         .wa-btn:hover { background: #15803d; }
 
-        /* iOS safe area para o sticky bar */
-        .sticky-bar {
-            padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+        /* ── Card ────────────────────────────────────── */
+        .panel {
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: border-color 0.3s;
+        }
+        .panel:hover { border-color: rgba(212,175,55,0.25); }
+
+        /* ── Icon badge ──────────────────────────────── */
+        .icon-badge {
+            width: 52px; height: 52px; border-radius: 12px;
+            background: rgba(52,211,153,0.1);
+            border: 1px solid rgba(52,211,153,0.2);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+
+        /* ── Step circle ─────────────────────────────── */
+        .step-on  { border-color: #D4AF37; color: #D4AF37; box-shadow: 0 0 20px rgba(212,175,55,0.15); }
+        .step-off { border-color: rgba(255,255,255,0.15); color: rgba(255,255,255,0.4); }
+
+        /* ── FAQ accordion ───────────────────────────── */
+        .faq-item { border-bottom: 1px solid rgba(255,255,255,0.07); }
+        .faq-item summary { list-style: none; cursor: pointer; }
+        .faq-item summary::-webkit-details-marker { display: none; }
+        .faq-item[open] .faq-plus  { display: none; }
+        .faq-item[open] .faq-minus { display: block; }
+        .faq-item .faq-minus { display: none; }
+        .faq-body { animation: fadeDown 0.22s ease; }
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Sticky bar safe area ────────────────────── */
+        .sticky-bar { padding-bottom: max(0.75rem, env(safe-area-inset-bottom)); }
+
+        /* ── Highlight box (quanto custa) ────────────── */
+        .highlight-box {
+            background: rgba(212,175,55,0.06);
+            border: 1px solid rgba(212,175,55,0.2);
         }
     </style>
 </head>
 
 <body class="bg-dark-900 text-gray-300 antialiased selection:bg-gold selection:text-dark-900">
 
-<!-- ═══════════════════════════════════════════
+<!-- ════════════════════════════════════════════
      HEADER
-═══════════════════════════════════════════ -->
+════════════════════════════════════════════ -->
 <header class="fixed w-full top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-white/8">
-    <div class="max-w-5xl mx-auto px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto px-6 lg:px-8">
         <div class="flex justify-between items-center h-20">
-
-            <!-- Logo -->
             <a href="#" class="flex items-center gap-3">
                 <svg width="32" height="32" viewBox="0 0 38 38" fill="none">
                     <polygon points="19,2 36,34 2,34" fill="none" stroke="#D4AF37" stroke-width="1.5"/>
@@ -136,11 +145,8 @@
                     <span class="block text-[9px] text-gold uppercase tracking-[0.2em] font-medium leading-none mt-0.5">Engenharia Tributária</span>
                 </div>
             </a>
-
-            <!-- CTA header — visível a partir de sm -->
             <a href="https://wa.me/5521966283284?text=Ol%C3%A1.%20Quero%20fazer%20a%20triagem%20gratuita%20do%20meu%20IPTU.%20Vou%20enviar%20o%20carn%C3%AA%20na%20sequ%C3%AAncia."
-               target="_blank"
-               onclick="trackWA('header')"
+               target="_blank" onclick="trackWA('header')"
                class="wa-btn hidden sm:inline-flex px-6 py-3 min-h-[48px]">
                 <iconify-icon icon="mdi:whatsapp" class="text-lg"></iconify-icon>
                 <span>Enviar carnê</span>
@@ -149,158 +155,210 @@
     </div>
 </header>
 
-<!-- ═══════════════════════════════════════════
-     SEÇÃO 1 — HERO
-═══════════════════════════════════════════ -->
+<!-- ════════════════════════════════════════════
+     SEÇÃO 1 — HERO  (escuro)
+════════════════════════════════════════════ -->
 <section class="relative pt-44 pb-28 lg:pt-56 lg:pb-40 overflow-hidden"
-         style="background: radial-gradient(circle at top right, #1a1a2e 0%, #0f1419 65%);">
-
+         style="background: radial-gradient(circle at top right, #161c26 0%, #0f1419 60%);">
     <div class="absolute inset-0 hero-grid pointer-events-none"></div>
     <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-gold/5 rounded-full blur-[130px] pointer-events-none"></div>
-    <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-green-900/10 rounded-full blur-[100px] pointer-events-none"></div>
 
-    <div class="max-w-5xl mx-auto px-6 lg:px-8 relative z-10">
-        <div class="max-w-3xl">
+    <div class="max-w-6xl mx-auto px-6 lg:px-8 relative z-10">
+        <div class="grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
 
-            <div class="inline-flex items-center gap-3 mb-8">
-                <span class="w-8 h-[1px] bg-gold"></span>
-                <span class="text-gold text-xs font-semibold uppercase tracking-[0.2em]">Auditoria Técnica · Rio de Janeiro</span>
+            <!-- Texto -->
+            <div>
+                <div class="inline-flex items-center gap-3 mb-8">
+                    <span class="w-8 h-[1px] bg-gold"></span>
+                    <span class="text-gold text-xs font-semibold uppercase tracking-[0.2em]">Auditoria Técnica · Rio de Janeiro</span>
+                </div>
+                <h1 class="text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-white leading-[1.08] mb-6 tracking-tight">
+                    Seu IPTU pode estar com<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-gold to-yellow-200">
+                        erro de cadastro.<br>A Vert analisa.
+                    </span>
+                </h1>
+                <p class="text-lg text-gray-400 mb-10 font-light leading-relaxed">
+                    Atuamos no Município do Rio de Janeiro com triagem técnica do seu carnê.
+                </p>
+                <div class="flex flex-col items-start gap-4">
+                    <a href="https://wa.me/5521966283284?text=Ol%C3%A1.%20Quero%20fazer%20a%20triagem%20gratuita%20do%20meu%20IPTU.%20Vou%20enviar%20o%20carn%C3%AA%20na%20sequ%C3%AAncia."
+                       target="_blank" onclick="trackWA('hero')"
+                       class="wa-btn px-10 py-5 min-h-[56px] text-sm shadow-[0_0_30px_rgba(34,197,94,0.2)]">
+                        <iconify-icon icon="mdi:whatsapp" class="text-xl"></iconify-icon>
+                        Iniciar pré-análise gratuita
+                    </a>
+                    <p class="text-sm text-gray-500 flex items-center gap-2">
+                        <iconify-icon icon="lucide:clock" class="text-gold"></iconify-icon>
+                        Retorno em até 48 horas úteis. Sem custo.
+                    </p>
+                </div>
             </div>
 
-            <h1 class="text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-white leading-[1.1] mb-6 tracking-tight">
-                Seu IPTU pode estar com<br class="hidden md:block">
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-gold to-yellow-200">
-                    erro de cadastro. A Vert analisa.
-                </span>
-            </h1>
+            <!-- Visual técnico — desktop -->
+            <div class="hidden lg:block">
+                <div class="relative">
+                    <div class="absolute -inset-4 bg-emerald-500/5 rounded-3xl blur-2xl"></div>
+                    <div class="relative bg-dark-800 border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
+                        <!-- Barra de título -->
+                        <div class="flex items-center justify-between px-6 py-4 border-b border-white/8 bg-dark-900/60">
+                            <div class="flex items-center gap-2">
+                                <div class="w-2.5 h-2.5 rounded-full bg-red-500/70"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/70"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-green-500/70"></div>
+                            </div>
+                            <span class="text-xs text-gold font-mono uppercase tracking-wider">Análise · IPTU_2024</span>
+                            <div class="w-16"></div>
+                        </div>
+                        <!-- Conteúdo -->
+                        <div class="p-6">
+                            <p class="text-[10px] text-gray-600 uppercase tracking-widest mb-3">Dados do cadastro municipal</p>
+                            <div class="space-y-2.5 mb-5">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-500">Área construída</span>
+                                    <span class="text-red-400 font-mono font-semibold">850 m²</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-500">Valor venal</span>
+                                    <span class="text-gray-400 font-mono">R$ 1.200.000</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-500">Tipologia</span>
+                                    <span class="text-gray-400 font-mono">Comercial — B</span>
+                                </div>
+                            </div>
+                            <!-- Divider -->
+                            <div class="relative my-5">
+                                <div class="h-px bg-white/8"></div>
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <span class="bg-dark-800 px-3 text-[11px] text-orange-400 font-semibold flex items-center gap-1.5">
+                                        <iconify-icon icon="lucide:triangle-alert" class="text-sm"></iconify-icon>
+                                        Divergência identificada
+                                    </span>
+                                </div>
+                            </div>
+                            <p class="text-[10px] text-gray-600 uppercase tracking-widest mb-3">Levantamento técnico</p>
+                            <div class="space-y-2.5 mb-5">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-500">Área real medida</span>
+                                    <span class="text-gold font-mono font-semibold">620 m²</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-500">Divergência</span>
+                                    <span class="text-gold font-mono font-semibold">− 27%</span>
+                                </div>
+                            </div>
+                            <!-- Status -->
+                            <div class="pt-4 border-t border-white/8 flex items-center justify-between">
+                                <span class="text-xs text-gray-600">Status</span>
+                                <span class="text-xs font-semibold text-orange-400 bg-orange-400/10 border border-orange-400/20 px-3 py-1 rounded-full">
+                                    Revisão recomendada
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <p class="text-lg md:text-xl text-gray-400 mb-10 font-light leading-relaxed max-w-xl">
-                Atuamos no Município do Rio de Janeiro com triagem técnica do seu carnê.
-            </p>
+        </div>
+    </div>
+</section>
 
-            <div class="flex flex-col items-start gap-4">
-                <a href="https://wa.me/5521966283284?text=Ol%C3%A1.%20Quero%20fazer%20a%20triagem%20gratuita%20do%20meu%20IPTU.%20Vou%20enviar%20o%20carn%C3%AA%20na%20sequ%C3%AAncia."
-                   target="_blank"
-                   onclick="trackWA('hero')"
-                   class="wa-btn px-10 py-5 min-h-[56px] text-sm shadow-[0_0_30px_rgba(34,197,94,0.2)]">
-                    <iconify-icon icon="mdi:whatsapp" class="text-xl"></iconify-icon>
-                    Enviar carnê pelo WhatsApp
-                </a>
-                <p class="text-sm text-gray-500 flex items-center gap-2">
-                    <iconify-icon icon="lucide:clock" class="text-gold"></iconify-icon>
-                    Triagem inicial em até 48 horas úteis. Sem custo.
-                </p>
+<!-- ════════════════════════════════════════════
+     SEÇÃO 2 — EXPLICAÇÃO DA DOR  (claro)
+════════════════════════════════════════════ -->
+<section class="py-28 lg:py-40 bg-dark-800 border-t border-white/5">
+    <div class="max-w-6xl mx-auto px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center lg:text-left">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-10 tracking-tight leading-snug">
+                A maioria dos imóveis paga IPTU sem nunca conferir o cadastro
+            </h2>
+            <div class="space-y-6 text-gray-400 text-base leading-[1.85]">
+                <p>O IPTU é calculado com base no cadastro do imóvel na Prefeitura: área construída, uso, tipologia, valor venal. Quando alguma dessas informações está desatualizada ou foi cadastrada com erro, o imposto cobrado deixa de refletir a realidade do imóvel.</p>
+                <p>Esse tipo de inconsistência costuma passar despercebida porque o carnê chega todo ano com aparência normal. O proprietário paga, e o erro continua exercício após exercício.</p>
+                <p>A revisão administrativa do lançamento existe justamente para corrigir esses casos.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     SEÇÃO 2 — EXPLICAÇÃO DA DOR
-═══════════════════════════════════════════ -->
-<section class="py-24 lg:py-32 bg-dark-900 border-t border-white/5">
-    <div class="max-w-5xl mx-auto px-6 lg:px-8">
-        <div class="max-w-3xl mx-auto">
-
-            <h2 class="text-2xl md:text-[2rem] font-bold text-white mb-10 tracking-tight leading-snug">
-                A maioria dos imóveis paga IPTU<br class="hidden md:block"> sem nunca conferir o cadastro
-            </h2>
-
-            <div class="space-y-6 text-gray-400 text-[1.05rem] leading-[1.8]">
-                <p>
-                    O IPTU é calculado com base no cadastro do imóvel na Prefeitura: área construída, uso, tipologia, valor venal. Quando alguma dessas informações está desatualizada ou foi cadastrada com erro, o imposto cobrado deixa de refletir a realidade do imóvel.
-                </p>
-                <p>
-                    Esse tipo de inconsistência costuma passar despercebida porque o carnê chega todo ano com aparência normal. O proprietário paga, e o erro continua exercício após exercício.
-                </p>
-                <p>
-                    A revisão administrativa do lançamento existe justamente para corrigir esses casos.
-                </p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ═══════════════════════════════════════════
-     SEÇÃO 3 — QUANDO MERECE REVISÃO
-═══════════════════════════════════════════ -->
-<section class="py-24 lg:py-32 bg-dark-800 border-y border-white/5">
-    <div class="max-w-5xl mx-auto px-6 lg:px-8">
-
-        <div class="mb-12">
-            <span class="tag mb-4 inline-flex">Indicadores de revisão</span>
-            <h2 class="text-2xl md:text-[2rem] font-bold text-white tracking-tight">
-                Quando o IPTU pode merecer revisão
+<!-- ════════════════════════════════════════════
+     SEÇÃO 3 — QUANDO MERECE REVISÃO  (escuro)
+════════════════════════════════════════════ -->
+<section class="py-28 lg:py-40 bg-dark-900 border-t border-white/5">
+    <div class="max-w-6xl mx-auto px-6 lg:px-8">
+        <div class="text-center mb-14">
+            <span class="tag mb-5">Indicadores de revisão</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight">
+                Seu caso pode merecer análise se…
             </h2>
         </div>
-
-        <!-- Dois blocos com peso visual igual, lado a lado em desktop -->
         <div class="grid lg:grid-cols-2 gap-6">
 
-            <!-- Bloco A — Já desconfia -->
-            <div class="block-card rounded-2xl p-8 lg:p-10">
+            <!-- Bloco A -->
+            <div class="panel rounded-2xl p-8 lg:p-10">
                 <div class="flex items-start gap-4 mb-7">
-                    <div class="w-9 h-9 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <iconify-icon icon="lucide:search" class="text-gold text-sm"></iconify-icon>
+                    <div class="icon-badge" style="background:rgba(251,146,60,0.1);border-color:rgba(251,146,60,0.2);">
+                        <iconify-icon icon="lucide:triangle-alert" class="text-orange-400 text-2xl"></iconify-icon>
                     </div>
-                    <h3 class="text-base font-bold text-white leading-snug">
-                        Sinais clássicos de que algo pode estar errado
+                    <h3 class="text-lg font-bold text-white leading-snug mt-1">
+                        Sinais que você já consegue perceber
                     </h3>
                 </div>
                 <ul class="space-y-4">
                     <li class="flex items-start gap-3">
-                        <iconify-icon icon="lucide:chevron-right" class="text-gold flex-shrink-0 mt-0.5 text-sm"></iconify-icon>
-                        <span class="text-gray-400 text-sm leading-relaxed">O IPTU aumentou de forma significativa de um ano para outro, sem explicação clara</span>
+                        <iconify-icon icon="lucide:chevron-right" class="text-emerald-400 flex-shrink-0 mt-0.5"></iconify-icon>
+                        <span class="text-gray-400 leading-relaxed">O IPTU aumentou de forma significativa de um ano para outro, sem explicação clara</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <iconify-icon icon="lucide:chevron-right" class="text-gold flex-shrink-0 mt-0.5 text-sm"></iconify-icon>
-                        <span class="text-gray-400 text-sm leading-relaxed">Você suspeita que a área construída registrada na Prefeitura está diferente da área real</span>
+                        <iconify-icon icon="lucide:chevron-right" class="text-emerald-400 flex-shrink-0 mt-0.5"></iconify-icon>
+                        <span class="text-gray-400 leading-relaxed">Você suspeita que a área construída registrada na Prefeitura está diferente da área real</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <iconify-icon icon="lucide:chevron-right" class="text-gold flex-shrink-0 mt-0.5 text-sm"></iconify-icon>
-                        <span class="text-gray-400 text-sm leading-relaxed">O imóvel mudou de uso (residencial virou comercial ou vice-versa) e o cadastro não acompanhou</span>
+                        <iconify-icon icon="lucide:chevron-right" class="text-emerald-400 flex-shrink-0 mt-0.5"></iconify-icon>
+                        <span class="text-gray-400 leading-relaxed">O imóvel mudou de uso (residencial para comercial ou vice-versa) e o cadastro não acompanhou</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <iconify-icon icon="lucide:chevron-right" class="text-gold flex-shrink-0 mt-0.5 text-sm"></iconify-icon>
-                        <span class="text-gray-400 text-sm leading-relaxed">Houve reforma, ampliação ou demolição sem averbação no cadastro municipal</span>
+                        <iconify-icon icon="lucide:chevron-right" class="text-emerald-400 flex-shrink-0 mt-0.5"></iconify-icon>
+                        <span class="text-gray-400 leading-relaxed">Houve reforma, ampliação ou demolição sem atualização no cadastro municipal</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <iconify-icon icon="lucide:chevron-right" class="text-gold flex-shrink-0 mt-0.5 text-sm"></iconify-icon>
-                        <span class="text-gray-400 text-sm leading-relaxed">Você acha que o valor venal informado no carnê está descolado da realidade</span>
+                        <iconify-icon icon="lucide:chevron-right" class="text-emerald-400 flex-shrink-0 mt-0.5"></iconify-icon>
+                        <span class="text-gray-400 leading-relaxed">Você acha que o valor venal informado no carnê está descolado da realidade</span>
                     </li>
                 </ul>
             </div>
 
-            <!-- Bloco B — Nunca prestou atenção -->
-            <div class="block-card rounded-2xl p-8 lg:p-10">
+            <!-- Bloco B -->
+            <div class="panel rounded-2xl p-8 lg:p-10">
                 <div class="flex items-start gap-4 mb-7">
-                    <div class="w-9 h-9 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <iconify-icon icon="lucide:eye-off" class="text-gold text-sm"></iconify-icon>
+                    <div class="icon-badge">
+                        <iconify-icon icon="lucide:eye-off" class="text-emerald-400 text-2xl"></iconify-icon>
                     </div>
-                    <h3 class="text-base font-bold text-white leading-snug">
-                        Situações que costumam esconder erro sem você perceber
+                    <h3 class="text-lg font-bold text-white leading-snug mt-1">
+                        Situações que escondem erro sem você perceber
                     </h3>
                 </div>
                 <ul class="space-y-4">
                     <li class="flex items-start gap-3">
-                        <iconify-icon icon="lucide:chevron-right" class="text-gold flex-shrink-0 mt-0.5 text-sm"></iconify-icon>
-                        <span class="text-gray-400 text-sm leading-relaxed">Imóvel comercial, galpão, laje ou terreno — categorias com maior incidência de erro de enquadramento</span>
+                        <iconify-icon icon="lucide:chevron-right" class="text-emerald-400 flex-shrink-0 mt-0.5"></iconify-icon>
+                        <span class="text-gray-400 leading-relaxed">Imóvel comercial, galpão, laje ou terreno — categorias com maior incidência de erro de enquadramento</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <iconify-icon icon="lucide:chevron-right" class="text-gold flex-shrink-0 mt-0.5 text-sm"></iconify-icon>
-                        <span class="text-gray-400 text-sm leading-relaxed">Imóvel comprado há mais de 5 anos sem revisão de cadastro</span>
+                        <iconify-icon icon="lucide:chevron-right" class="text-emerald-400 flex-shrink-0 mt-0.5"></iconify-icon>
+                        <span class="text-gray-400 leading-relaxed">Imóvel comprado há mais de 5 anos sem revisão de cadastro</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <iconify-icon icon="lucide:chevron-right" class="text-gold flex-shrink-0 mt-0.5 text-sm"></iconify-icon>
-                        <span class="text-gray-400 text-sm leading-relaxed">Imóvel em prédio antigo onde unidades já passaram por reforma</span>
+                        <iconify-icon icon="lucide:chevron-right" class="text-emerald-400 flex-shrink-0 mt-0.5"></iconify-icon>
+                        <span class="text-gray-400 leading-relaxed">Imóvel em prédio antigo onde unidades já passaram por reforma</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <iconify-icon icon="lucide:chevron-right" class="text-gold flex-shrink-0 mt-0.5 text-sm"></iconify-icon>
-                        <span class="text-gray-400 text-sm leading-relaxed">Terreno sendo cobrado com IPTU alto sem edificação proporcional</span>
+                        <iconify-icon icon="lucide:chevron-right" class="text-emerald-400 flex-shrink-0 mt-0.5"></iconify-icon>
+                        <span class="text-gray-400 leading-relaxed">Terreno sendo cobrado com IPTU alto sem edificação proporcional</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <iconify-icon icon="lucide:chevron-right" class="text-gold flex-shrink-0 mt-0.5 text-sm"></iconify-icon>
-                        <span class="text-gray-400 text-sm leading-relaxed">Conjunto de imóveis sob a mesma propriedade nunca analisados</span>
+                        <iconify-icon icon="lucide:chevron-right" class="text-emerald-400 flex-shrink-0 mt-0.5"></iconify-icon>
+                        <span class="text-gray-400 leading-relaxed">Conjunto de imóveis sob a mesma propriedade nunca analisados</span>
                     </li>
                 </ul>
             </div>
@@ -309,104 +367,245 @@
     </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     SEÇÃO 4 — COMO FUNCIONA
-═══════════════════════════════════════════ -->
-<section class="py-24 lg:py-32 bg-dark-900">
-    <div class="max-w-5xl mx-auto px-6 lg:px-8">
-
-        <div class="text-center mb-16">
-            <span class="tag mb-4 mx-auto">Metodologia</span>
-            <h2 class="text-2xl md:text-[2rem] font-bold text-white tracking-tight">Como funciona</h2>
+<!-- ════════════════════════════════════════════
+     SEÇÃO 4 — ANTES / DEPOIS  (claro)
+════════════════════════════════════════════ -->
+<section class="py-28 lg:py-40 bg-dark-800 border-t border-white/5">
+    <div class="max-w-6xl mx-auto px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight">
+                O tipo de erro que encontramos
+            </h2>
         </div>
+        <div class="grid lg:grid-cols-[1fr_auto_1fr] gap-4 items-center max-w-4xl mx-auto">
 
-        <!-- Desktop: horizontal | Mobile: vertical -->
+            <!-- Cadastro -->
+            <div class="bg-dark-900 border border-white/10 rounded-2xl p-7">
+                <div class="flex items-center gap-2.5 mb-5">
+                    <iconify-icon icon="lucide:database" class="text-gray-500 text-lg"></iconify-icon>
+                    <p class="text-xs font-bold text-gray-500 uppercase tracking-widest">Cadastro da Prefeitura</p>
+                </div>
+                <ul class="space-y-3.5">
+                    <li class="flex justify-between items-center">
+                        <span class="text-gray-500 text-sm">Área construída</span>
+                        <span class="text-red-400 font-mono text-sm font-semibold">80 m²</span>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span class="text-gray-500 text-sm">Uso</span>
+                        <span class="text-red-400 font-mono text-sm font-semibold">Comercial</span>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span class="text-gray-500 text-sm">Tipologia</span>
+                        <span class="text-red-400 font-mono text-sm font-semibold">Padrão B</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Seta -->
+            <div class="flex flex-col items-center justify-center gap-2 py-4 lg:py-0">
+                <iconify-icon icon="lucide:arrow-right" class="hidden lg:block text-gold text-2xl"></iconify-icon>
+                <iconify-icon icon="lucide:arrow-down" class="lg:hidden text-gold text-2xl"></iconify-icon>
+                <span class="text-[10px] text-gray-600 uppercase tracking-widest hidden lg:block">vs</span>
+            </div>
+
+            <!-- Realidade -->
+            <div class="bg-dark-900 border border-gold/20 rounded-2xl p-7">
+                <div class="flex items-center gap-2.5 mb-5">
+                    <iconify-icon icon="lucide:search" class="text-gold text-lg"></iconify-icon>
+                    <p class="text-xs font-bold text-gold uppercase tracking-widest">Levantamento real</p>
+                </div>
+                <ul class="space-y-3.5">
+                    <li class="flex justify-between items-center">
+                        <span class="text-gray-500 text-sm">Área real medida</span>
+                        <span class="text-gold font-mono text-sm font-semibold">65 m²</span>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span class="text-gray-500 text-sm">Uso real</span>
+                        <span class="text-gold font-mono text-sm font-semibold">Residencial</span>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span class="text-gray-500 text-sm">Tipologia correta</span>
+                        <span class="text-gold font-mono text-sm font-semibold">Padrão C</span>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <p class="text-center text-gray-500 text-sm mt-10 max-w-2xl mx-auto leading-relaxed">
+            Quando o cadastro não reflete a realidade, o IPTU calculado também não reflete. Essa é a base da revisão administrativa.
+        </p>
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     SEÇÃO 5 — CREDENCIAIS TÉCNICAS  (escuro)
+════════════════════════════════════════════ -->
+<section class="py-28 lg:py-40 bg-dark-900 border-t border-white/5">
+    <div class="max-w-6xl mx-auto px-6 lg:px-8">
+        <div class="text-center mb-14">
+            <span class="tag mb-5">Equipe</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight mb-4">
+                Análise feita por quem entende de imóvel
+            </h2>
+            <p class="text-gray-400 max-w-2xl mx-auto leading-relaxed">
+                A triagem do IPTU não é só leitura jurídica. A maior parte dos erros de cadastro envolve área, tipologia, uso e características construtivas — e isso exige olhar técnico.
+            </p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6">
+
+            <div class="panel rounded-2xl p-8 text-center">
+                <div class="icon-badge mx-auto mb-6" style="background:rgba(52,211,153,0.1);border-color:rgba(52,211,153,0.2);width:60px;height:60px;border-radius:16px;">
+                    <iconify-icon icon="lucide:hard-hat" class="text-emerald-400 text-2xl"></iconify-icon>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-3">Engenharia Civil</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Avaliação técnica de área construída, tipologia, padrão construtivo e elementos estruturais que impactam o lançamento.</p>
+            </div>
+
+            <div class="panel rounded-2xl p-8 text-center">
+                <div class="icon-badge mx-auto mb-6" style="background:rgba(52,211,153,0.1);border-color:rgba(52,211,153,0.2);width:60px;height:60px;border-radius:16px;">
+                    <iconify-icon icon="lucide:pencil-ruler" class="text-emerald-400 text-2xl"></iconify-icon>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-3">Arquitetura</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Análise de uso, ocupação, alterações, ampliações e características arquitetônicas relevantes para o cadastro municipal.</p>
+            </div>
+
+            <div class="panel rounded-2xl p-8 text-center">
+                <div class="icon-badge mx-auto mb-6" style="background:rgba(52,211,153,0.1);border-color:rgba(52,211,153,0.2);width:60px;height:60px;border-radius:16px;">
+                    <iconify-icon icon="lucide:map-pin" class="text-emerald-400 text-2xl"></iconify-icon>
+                </div>
+                <h3 class="text-lg font-bold text-white mb-3">Atuação local</h3>
+                <p class="text-gray-400 text-sm leading-relaxed">Foco exclusivo no Município do Rio de Janeiro. Conhecimento da legislação, das normas e dos procedimentos da Secretaria Municipal de Fazenda.</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     SEÇÃO 6 — COMO FUNCIONA  (claro)
+════════════════════════════════════════════ -->
+<section class="py-28 lg:py-40 bg-dark-800 border-t border-white/5">
+    <div class="max-w-6xl mx-auto px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <span class="tag mb-5">Metodologia</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight">Como funciona</h2>
+        </div>
         <div class="grid md:grid-cols-4 gap-10 md:gap-6 relative">
-
-            <!-- linha conectora — desktop only -->
+            <!-- Linha conectora desktop -->
             <div class="hidden md:block absolute top-7 pointer-events-none"
-                 style="left: calc(12.5% + 28px); right: calc(12.5% + 28px); height: 1px; background: linear-gradient(to right, rgba(212,175,55,0.5), rgba(212,175,55,0.1));"></div>
+                 style="left:calc(12.5% + 28px);right:calc(12.5% + 28px);height:1px;
+                        background:linear-gradient(to right,rgba(212,175,55,0.6),rgba(212,175,55,0.1));"></div>
 
-            <!-- Passo 1 -->
             <div class="flex md:flex-col items-start md:items-center gap-5 md:gap-0 md:text-center relative z-10">
-                <div class="w-14 h-14 rounded-full border bg-dark-900 flex items-center justify-center font-bold text-base flex-shrink-0 step-active">01</div>
+                <div class="w-14 h-14 rounded-full border bg-dark-800 flex items-center justify-center font-bold flex-shrink-0 step-on">01</div>
                 <div class="md:mt-6">
-                    <h3 class="text-white font-bold mb-2 text-sm md:text-base">Você envia o carnê pelo WhatsApp</h3>
+                    <h3 class="text-white font-bold mb-2">Você envia o carnê pelo WhatsApp</h3>
                     <p class="text-gray-500 text-sm leading-relaxed">Foto ou PDF do IPTU do exercício atual. Não precisa de documentos adicionais nessa etapa.</p>
                 </div>
             </div>
-
-            <!-- Passo 2 -->
             <div class="flex md:flex-col items-start md:items-center gap-5 md:gap-0 md:text-center relative z-10">
-                <div class="w-14 h-14 rounded-full border bg-dark-900 flex items-center justify-center font-bold text-base flex-shrink-0 step-inactive">02</div>
+                <div class="w-14 h-14 rounded-full border bg-dark-800 flex items-center justify-center font-bold flex-shrink-0 step-off">02</div>
                 <div class="md:mt-6">
-                    <h3 class="text-white font-bold mb-2 text-sm md:text-base">Nosso time técnico analisa</h3>
-                    <p class="text-gray-500 text-sm leading-relaxed">Identificamos se há sinais de inconsistência que justifiquem análise mais aprofundada.</p>
+                    <h3 class="text-white font-bold mb-2">Nosso time técnico analisa</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Identificamos sinais de inconsistência que justifiquem análise mais aprofundada.</p>
                 </div>
             </div>
-
-            <!-- Passo 3 -->
             <div class="flex md:flex-col items-start md:items-center gap-5 md:gap-0 md:text-center relative z-10">
-                <div class="w-14 h-14 rounded-full border bg-dark-900 flex items-center justify-center font-bold text-base flex-shrink-0 step-inactive">03</div>
+                <div class="w-14 h-14 rounded-full border bg-dark-800 flex items-center justify-center font-bold flex-shrink-0 step-off">03</div>
                 <div class="md:mt-6">
-                    <h3 class="text-white font-bold mb-2 text-sm md:text-base">Você recebe a triagem em até 48h úteis</h3>
+                    <h3 class="text-white font-bold mb-2">Você recebe a triagem em até 48h úteis</h3>
                     <p class="text-gray-500 text-sm leading-relaxed">Retorno com nossa leitura inicial: há sinais relevantes ou não.</p>
                 </div>
             </div>
-
-            <!-- Passo 4 -->
             <div class="flex md:flex-col items-start md:items-center gap-5 md:gap-0 md:text-center relative z-10">
-                <div class="w-14 h-14 rounded-full border bg-dark-900 flex items-center justify-center font-bold text-base flex-shrink-0 step-inactive">04</div>
+                <div class="w-14 h-14 rounded-full border bg-dark-800 flex items-center justify-center font-bold flex-shrink-0 step-off">04</div>
                 <div class="md:mt-6">
-                    <h3 class="text-white font-bold mb-2 text-sm md:text-base">Se houver sinais, conversamos sobre o próximo passo</h3>
-                    <p class="text-gray-500 text-sm leading-relaxed">Análise documental completa exige outros documentos e é feita em etapa separada.</p>
+                    <h3 class="text-white font-bold mb-2">Se houver sinais, conversamos sobre o próximo passo</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">A análise documental completa é feita em etapa separada, com documentos adicionais.</p>
                 </div>
             </div>
-
         </div>
     </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     SEÇÃO 5 — O QUE A VERT NÃO PROMETE
-═══════════════════════════════════════════ -->
-<section class="py-24 lg:py-32 bg-dark-800 border-y border-white/5">
-    <div class="max-w-5xl mx-auto px-6 lg:px-8">
-        <div class="max-w-2xl">
-
-            <div class="flex items-start gap-4 mb-8">
-                <div class="w-10 h-10 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center flex-shrink-0 mt-1">
-                    <iconify-icon icon="lucide:shield-check" class="text-gold"></iconify-icon>
+<!-- ════════════════════════════════════════════
+     SEÇÃO 7 — QUANTO CUSTA  (escuro)
+════════════════════════════════════════════ -->
+<section id="quanto-custa" class="py-28 lg:py-40 bg-dark-900 border-t border-white/5">
+    <div class="max-w-6xl mx-auto px-6 lg:px-8">
+        <div class="text-center mb-14">
+            <span class="tag mb-5">Transparência comercial</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight">Quanto custa</h2>
+        </div>
+        <div class="max-w-2xl mx-auto">
+            <p class="text-gray-400 text-base leading-relaxed mb-8">
+                A triagem inicial é gratuita. Você envia o carnê, nosso time analisa e retorna em até 48 horas úteis com a leitura técnica.
+            </p>
+            <p class="text-gray-400 text-base leading-relaxed mb-8">
+                Se a triagem apontar sinais relevantes e você decidir avançar para a análise documental completa e o processo de revisão, o trabalho é cobrado em dois componentes:
+            </p>
+            <div class="grid sm:grid-cols-2 gap-4 mb-8">
+                <div class="panel rounded-xl p-6">
+                    <div class="icon-badge mb-4">
+                        <iconify-icon icon="lucide:file-check" class="text-emerald-400 text-xl"></iconify-icon>
+                    </div>
+                    <h3 class="text-white font-bold mb-2">Honorário fixo na contratação</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Cobre a análise documental completa, a estruturação técnica do pedido e o acompanhamento administrativo.</p>
                 </div>
-                <div>
-                    <span class="tag mb-3 inline-flex">Transparência</span>
-                    <h2 class="text-2xl md:text-[2rem] font-bold text-white tracking-tight">O que esperar da Vert</h2>
+                <div class="panel rounded-xl p-6">
+                    <div class="icon-badge mb-4">
+                        <iconify-icon icon="lucide:percent" class="text-emerald-400 text-xl"></iconify-icon>
+                    </div>
+                    <h3 class="text-white font-bold mb-2">Percentual sobre a economia</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">Cobrado apenas se houver resultado efetivo — redução do IPTU ou restituição de valores pagos.</p>
                 </div>
             </div>
+            <div class="highlight-box rounded-xl p-6 text-center">
+                <p class="text-gold font-semibold text-base tracking-wide">
+                    Sem triagem cobrada. Sem cobrança escondida. Sem promessa de êxito.
+                </p>
+                <p class="text-gray-500 text-sm mt-2">Os valores são apresentados antes de qualquer contratação.</p>
+            </div>
+        </div>
+    </div>
+</section>
 
-            <p class="text-gray-400 text-[1.05rem] leading-relaxed mb-8">
+<!-- ════════════════════════════════════════════
+     SEÇÃO 8 — O QUE ESPERAR  (claro)
+════════════════════════════════════════════ -->
+<section class="py-28 lg:py-40 bg-dark-800 border-t border-white/5">
+    <div class="max-w-6xl mx-auto px-6 lg:px-8">
+        <div class="max-w-2xl mx-auto">
+            <div class="flex items-start gap-4 mb-10">
+                <div class="icon-badge flex-shrink-0 mt-1">
+                    <iconify-icon icon="lucide:shield-check" class="text-emerald-400 text-xl"></iconify-icon>
+                </div>
+                <div>
+                    <span class="tag mb-4 inline-flex">Transparência</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight">O que esperar da Vert</h2>
+                </div>
+            </div>
+            <p class="text-gray-400 text-base leading-relaxed mb-8">
                 A triagem inicial é uma leitura técnica do seu carnê com base nos sinais conhecidos de inconsistência cadastral. Ela não é:
             </p>
-
             <ul class="space-y-4 mb-8">
                 <li class="flex items-start gap-3 text-gray-400">
-                    <iconify-icon icon="lucide:x" class="text-red-400 flex-shrink-0 mt-0.5"></iconify-icon>
+                    <iconify-icon icon="lucide:x" class="text-red-400 flex-shrink-0 mt-0.5 text-lg"></iconify-icon>
                     <span>Uma garantia de que existe erro no seu IPTU</span>
                 </li>
                 <li class="flex items-start gap-3 text-gray-400">
-                    <iconify-icon icon="lucide:x" class="text-red-400 flex-shrink-0 mt-0.5"></iconify-icon>
+                    <iconify-icon icon="lucide:x" class="text-red-400 flex-shrink-0 mt-0.5 text-lg"></iconify-icon>
                     <span>Uma promessa de redução do imposto</span>
                 </li>
                 <li class="flex items-start gap-3 text-gray-400">
-                    <iconify-icon icon="lucide:x" class="text-red-400 flex-shrink-0 mt-0.5"></iconify-icon>
+                    <iconify-icon icon="lucide:x" class="text-red-400 flex-shrink-0 mt-0.5 text-lg"></iconify-icon>
                     <span>Um lançamento tributário oficial</span>
                 </li>
                 <li class="flex items-start gap-3 text-gray-400">
-                    <iconify-icon icon="lucide:x" class="text-red-400 flex-shrink-0 mt-0.5"></iconify-icon>
+                    <iconify-icon icon="lucide:x" class="text-red-400 flex-shrink-0 mt-0.5 text-lg"></iconify-icon>
                     <span>Um substituto para o processo administrativo junto à Prefeitura</span>
                 </li>
             </ul>
-
             <p class="text-gray-400 leading-relaxed">
                 A confirmação de qualquer inconsistência depende de documentação adicional e de procedimento formal junto à Secretaria Municipal de Fazenda. A Vert acompanha esse processo quando o caso é tecnicamente viável.
             </p>
@@ -414,47 +613,147 @@
     </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     SEÇÃO 6 — CTA FINAL
-═══════════════════════════════════════════ -->
-<section class="py-24 lg:py-32 bg-dark-900">
-    <div class="max-w-5xl mx-auto px-6 lg:px-8 text-center">
+<!-- ════════════════════════════════════════════
+     SEÇÃO 9 — FAQ  (escuro)
+════════════════════════════════════════════ -->
+<section class="py-28 lg:py-40 bg-dark-900 border-t border-white/5">
+    <div class="max-w-6xl mx-auto px-6 lg:px-8">
+        <div class="text-center mb-14">
+            <span class="tag mb-5">Dúvidas frequentes</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight">Perguntas comuns</h2>
+        </div>
+        <div class="max-w-3xl mx-auto">
+
+            <details class="faq-item faq-analytics">
+                <summary class="faq-question flex justify-between items-center py-5 gap-4">
+                    <span class="text-white font-medium text-base">Posso pedir revisão de IPTU se já paguei?</span>
+                    <span class="text-gold flex-shrink-0">
+                        <iconify-icon icon="lucide:plus" class="text-xl faq-plus"></iconify-icon>
+                        <iconify-icon icon="lucide:minus" class="text-xl faq-minus"></iconify-icon>
+                    </span>
+                </summary>
+                <div class="faq-body pb-6 text-gray-400 leading-relaxed text-sm">
+                    Sim. A revisão administrativa pode resultar em redução para os próximos exercícios e/ou em restituição de valores pagos indevidamente nos exercícios anteriores, observados os prazos legais de prescrição e decadência.
+                </div>
+            </details>
+
+            <details class="faq-item faq-analytics">
+                <summary class="faq-question flex justify-between items-center py-5 gap-4">
+                    <span class="text-white font-medium text-base">Existe risco de a Prefeitura aumentar o IPTU em vez de reduzir?</span>
+                    <span class="text-gold flex-shrink-0">
+                        <iconify-icon icon="lucide:plus" class="text-xl faq-plus"></iconify-icon>
+                        <iconify-icon icon="lucide:minus" class="text-xl faq-minus"></iconify-icon>
+                    </span>
+                </summary>
+                <div class="faq-body pb-6 text-gray-400 leading-relaxed text-sm">
+                    Em tese, sim. Qualquer revisão de cadastro pode resultar em ajuste para mais ou para menos. Por isso a triagem técnica antes da contratação é importante: identificar os casos em que o pedido faz sentido e os casos em que é melhor não mexer.
+                </div>
+            </details>
+
+            <details class="faq-item faq-analytics">
+                <summary class="faq-question flex justify-between items-center py-5 gap-4">
+                    <span class="text-white font-medium text-base">Quanto tempo demora o processo na Prefeitura?</span>
+                    <span class="text-gold flex-shrink-0">
+                        <iconify-icon icon="lucide:plus" class="text-xl faq-plus"></iconify-icon>
+                        <iconify-icon icon="lucide:minus" class="text-xl faq-minus"></iconify-icon>
+                    </span>
+                </summary>
+                <div class="faq-body pb-6 text-gray-400 leading-relaxed text-sm">
+                    Depende do tipo de pedido e da complexidade do caso. Processos administrativos no Município do Rio de Janeiro costumam levar de alguns meses a mais de um ano. A Vert acompanha o processo do início ao fim.
+                </div>
+            </details>
+
+            <details class="faq-item faq-analytics">
+                <summary class="faq-question flex justify-between items-center py-5 gap-4">
+                    <span class="text-white font-medium text-base">Vocês atendem imóveis comerciais, galpões e terrenos?</span>
+                    <span class="text-gold flex-shrink-0">
+                        <iconify-icon icon="lucide:plus" class="text-xl faq-plus"></iconify-icon>
+                        <iconify-icon icon="lucide:minus" class="text-xl faq-minus"></iconify-icon>
+                    </span>
+                </summary>
+                <div class="faq-body pb-6 text-gray-400 leading-relaxed text-sm">
+                    Sim. Aliás, esses tipos de imóvel concentram parte relevante dos erros de cadastro, porque costumam ter características técnicas mais complexas — área, uso, classificação.
+                </div>
+            </details>
+
+            <details class="faq-item faq-analytics">
+                <summary class="faq-question flex justify-between items-center py-5 gap-4">
+                    <span class="text-white font-medium text-base">Quais documentos vou precisar enviar depois?</span>
+                    <span class="text-gold flex-shrink-0">
+                        <iconify-icon icon="lucide:plus" class="text-xl faq-plus"></iconify-icon>
+                        <iconify-icon icon="lucide:minus" class="text-xl faq-minus"></iconify-icon>
+                    </span>
+                </summary>
+                <div class="faq-body pb-6 text-gray-400 leading-relaxed text-sm">
+                    Na triagem inicial, apenas o carnê. Se o caso seguir, geralmente são necessários: matrícula atualizada do imóvel, IPTU de exercícios anteriores, planta ou croqui quando disponível, documento de identificação do proprietário e procuração específica para representação.
+                </div>
+            </details>
+
+            <details class="faq-item faq-analytics">
+                <summary class="faq-question flex justify-between items-center py-5 gap-4">
+                    <span class="text-white font-medium text-base">A Vert garante redução do IPTU?</span>
+                    <span class="text-gold flex-shrink-0">
+                        <iconify-icon icon="lucide:plus" class="text-xl faq-plus"></iconify-icon>
+                        <iconify-icon icon="lucide:minus" class="text-xl faq-minus"></iconify-icon>
+                    </span>
+                </summary>
+                <div class="faq-body pb-6 text-gray-400 leading-relaxed text-sm">
+                    Não. Nenhum profissional sério garante resultado em processo administrativo. O que garantimos é a análise técnica honesta antes da contratação: se identificarmos que o caso não tem fundamento, dizemos isso.
+                </div>
+            </details>
+
+            <details class="faq-item faq-analytics">
+                <summary class="faq-question flex justify-between items-center py-5 gap-4">
+                    <span class="text-white font-medium text-base">Vocês atendem fora do Rio de Janeiro?</span>
+                    <span class="text-gold flex-shrink-0">
+                        <iconify-icon icon="lucide:plus" class="text-xl faq-plus"></iconify-icon>
+                        <iconify-icon icon="lucide:minus" class="text-xl faq-minus"></iconify-icon>
+                    </span>
+                </summary>
+                <div class="faq-body pb-6 text-gray-400 leading-relaxed text-sm">
+                    No momento, não. Nossa atuação é focada no Município do Rio de Janeiro.
+                </div>
+            </details>
+
+        </div>
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════
+     SEÇÃO 10 — CTA FINAL  (escuro com acento)
+════════════════════════════════════════════ -->
+<section class="py-28 lg:py-40 bg-dark-900 border-t border-white/5 relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(22,163,74,0.06) 0%,transparent 70%);"></div>
+    <div class="max-w-6xl mx-auto px-6 lg:px-8 text-center relative z-10">
         <div class="max-w-xl mx-auto">
-
-            <h2 class="text-2xl md:text-[2rem] font-bold text-white mb-6 tracking-tight">
-                Envie seu carnê e receba a triagem
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-6 tracking-tight">
+                Faça uma pré-análise do seu IPTU pelo WhatsApp
             </h2>
-
-            <p class="text-gray-400 text-[1.05rem] leading-relaxed mb-10">
+            <p class="text-gray-400 text-base leading-relaxed mb-10">
                 Se você se reconheceu em alguma das situações acima, vale a pena fazer a triagem. É gratuita, é feita por nosso time técnico, e o retorno chega em até 48 horas úteis.
             </p>
-
             <div class="flex flex-col items-center gap-4">
                 <a href="https://wa.me/5521966283284?text=Ol%C3%A1.%20Quero%20fazer%20a%20triagem%20gratuita%20do%20meu%20IPTU.%20Vou%20enviar%20o%20carn%C3%AA%20na%20sequ%C3%AAncia."
-                   target="_blank"
-                   onclick="trackWA('cta_final')"
-                   class="wa-btn px-10 py-5 min-h-[56px] text-sm shadow-[0_0_30px_rgba(34,197,94,0.2)]">
+                   target="_blank" onclick="trackWA('cta_final')"
+                   class="wa-btn px-10 py-5 min-h-[56px] text-sm shadow-[0_0_40px_rgba(34,197,94,0.2)]">
                     <iconify-icon icon="mdi:whatsapp" class="text-xl"></iconify-icon>
-                    Enviar carnê pelo WhatsApp
+                    Iniciar pré-análise gratuita
                 </a>
                 <p class="text-sm text-gray-500 flex items-center gap-2">
                     <iconify-icon icon="lucide:clock" class="text-gold"></iconify-icon>
-                    Triagem em até 48 horas úteis. Sem custo.
+                    Retorno em até 48 horas úteis. Sem custo.
                 </p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     RODAPÉ + DISCLAIMER
-═══════════════════════════════════════════ -->
-<footer class="bg-dark-800 border-t border-white/10 pt-14 pb-10">
-    <div class="max-w-5xl mx-auto px-6 lg:px-8">
-
+<!-- ════════════════════════════════════════════
+     RODAPÉ
+════════════════════════════════════════════ -->
+<footer class="border-t border-white/10 pt-14 pb-10" style="background:#0a0d12;">
+    <div class="max-w-6xl mx-auto px-6 lg:px-8">
         <div class="flex flex-col md:flex-row justify-between gap-10 mb-10">
-
-            <!-- Marca -->
             <div class="max-w-xs">
                 <div class="flex items-center gap-3 mb-4">
                     <svg width="26" height="26" viewBox="0 0 38 38" fill="none">
@@ -467,42 +766,28 @@
                         <span class="block text-[9px] text-gold uppercase tracking-[0.2em]">Engenharia Tributária</span>
                     </div>
                 </div>
-                <p class="text-gray-500 text-sm leading-relaxed">Auditoria técnica de IPTU para imóveis no Município do Rio de Janeiro.</p>
-                <!-- Razão social e CNPJ serão adicionados quando disponíveis -->
+                <p class="text-gray-600 text-sm leading-relaxed">Auditoria técnica de IPTU para imóveis no Município do Rio de Janeiro.</p>
+                <!-- Razão social e CNPJ: adicionar quando disponíveis -->
             </div>
-
-            <!-- Contato -->
             <div>
-                <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Contato</p>
+                <p class="text-xs text-gray-600 uppercase tracking-widest mb-4">Contato</p>
                 <div class="space-y-3">
-                    <a href="https://wa.me/5521966283284"
-                       target="_blank"
-                       onclick="trackWA('footer')"
-                       class="flex items-center gap-2 text-gray-400 hover:text-gold text-sm transition-colors">
+                    <a href="https://wa.me/5521966283284" target="_blank" onclick="trackWA('footer')"
+                       class="flex items-center gap-2 text-gray-500 hover:text-gold text-sm transition-colors">
                         <iconify-icon icon="mdi:whatsapp" class="text-base"></iconify-icon>
                         (21) 96628-3284
                     </a>
-                    <!-- E-mail será adicionado quando disponível -->
+                    <!-- E-mail: adicionar quando disponível -->
                 </div>
             </div>
-
-            <!-- Legal -->
             <div>
-                <p class="text-xs text-gray-500 uppercase tracking-widest mb-4">Legal</p>
+                <p class="text-xs text-gray-600 uppercase tracking-widest mb-4">Legal</p>
                 <div class="space-y-2">
-                    <a href="politica-de-privacidade.html"
-                       class="block text-gray-400 hover:text-gold text-sm transition-colors">
-                        Política de Privacidade
-                    </a>
-                    <a href="politica-de-privacidade.html#direitos"
-                       class="block text-gray-400 hover:text-gold text-sm transition-colors">
-                        Direitos LGPD
-                    </a>
+                    <a href="politica-de-privacidade.html" class="block text-gray-500 hover:text-gold text-sm transition-colors">Política de Privacidade</a>
+                    <a href="politica-de-privacidade.html#direitos" class="block text-gray-500 hover:text-gold text-sm transition-colors">Direitos LGPD</a>
                 </div>
             </div>
-
         </div>
-
         <div class="border-t border-white/5 pt-8 space-y-3">
             <p class="text-xs text-gray-600 leading-relaxed max-w-4xl">
                 <strong class="text-gray-500">Aviso:</strong> Vert — Atuação no Município do Rio de Janeiro. A triagem inicial gratuita é uma leitura técnica preliminar baseada nos dados enviados pelo usuário. Não constitui parecer jurídico, lançamento tributário oficial nem garantia de redução de IPTU. Eventuais direitos a revisão dependem de procedimento administrativo formal junto à Secretaria Municipal de Fazenda do Rio de Janeiro.
@@ -512,58 +797,65 @@
     </div>
 </footer>
 
-<!-- ═══════════════════════════════════════════
-     BOTÃO STICKY — MOBILE ONLY (lg:hidden)
-═══════════════════════════════════════════ -->
+<!-- ════════════════════════════════════════════
+     STICKY WHATSAPP — MOBILE ONLY
+════════════════════════════════════════════ -->
 <div class="sticky-bar fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-dark-900/95 backdrop-blur-sm border-t border-white/10 px-4 pt-3">
     <a href="https://wa.me/5521966283284?text=Ol%C3%A1.%20Quero%20fazer%20a%20triagem%20gratuita%20do%20meu%20IPTU.%20Vou%20enviar%20o%20carn%C3%AA%20na%20sequ%C3%AAncia."
-       target="_blank"
-       onclick="trackWA('sticky')"
+       target="_blank" onclick="trackWA('sticky')"
        class="wa-btn w-full py-4 min-h-[52px] text-sm">
         <iconify-icon icon="mdi:whatsapp" class="text-xl"></iconify-icon>
-        Enviar carnê pelo WhatsApp
+        Iniciar pré-análise gratuita
     </a>
 </div>
-
-<!-- Espaçador para o sticky bar não cobrir o rodapé em mobile -->
-<div class="lg:hidden" style="height: 80px;"></div>
+<div class="lg:hidden" style="height:80px;"></div>
 
 <script>
-// ── Rastreamento de cliques no WhatsApp ─────────────────────────────────
-function trackWA(position) {
-    if (typeof gtag === 'function') {
-        gtag('event', 'wa_click', {
-            event_category: 'whatsapp',
-            event_label: position
-        });
-    }
-    // Meta Pixel — ativar quando o pixel estiver configurado
-    // if (typeof fbq === 'function') { fbq('trackCustom', 'WAClick', { position: position }); }
+// ── WA click tracking ────────────────────────────────────────────────────
+function trackWA(pos) {
+    if (typeof gtag === 'function') gtag('event', 'wa_click', { event_category: 'whatsapp', event_label: pos });
+    // if (typeof fbq === 'function') fbq('trackCustom', 'WAClick', { position: pos });
 }
 
-// ── Scroll depth (25 / 50 / 75 / 100%) ──────────────────────────────────
+// ── FAQ: ícone +/- e analytics ───────────────────────────────────────────
+document.querySelectorAll('.faq-analytics').forEach(function (el) {
+    el.addEventListener('toggle', function () {
+        if (this.open && typeof gtag === 'function') {
+            gtag('event', 'faq_open', {
+                event_category: 'faq',
+                event_label: this.querySelector('.faq-question span').textContent.trim().slice(0, 60)
+            });
+        }
+    });
+});
+
+// ── "Quanto custa" section view ──────────────────────────────────────────
 (function () {
-    var milestones = [25, 50, 75, 100];
-    var fired = {};
+    var el = document.getElementById('quanto-custa');
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    var obs = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) {
+            if (typeof gtag === 'function') gtag('event', 'section_view', { event_category: 'engagement', event_label: 'quanto_custa' });
+            obs.disconnect();
+        }
+    }, { threshold: 0.3 });
+    obs.observe(el);
+}());
 
-    function depth() {
-        var scrolled = window.scrollY || document.documentElement.scrollTop;
-        var total = document.documentElement.scrollHeight - window.innerHeight;
-        return total > 0 ? Math.round((scrolled / total) * 100) : 0;
+// ── Scroll depth 25 / 50 / 75 / 100 ────────────────────────────────────
+(function () {
+    var ms = [25, 50, 75, 100], fired = {};
+    function d() {
+        var s = window.scrollY || document.documentElement.scrollTop;
+        var t = document.documentElement.scrollHeight - window.innerHeight;
+        return t > 0 ? Math.round((s / t) * 100) : 0;
     }
-
     window.addEventListener('scroll', function () {
-        var d = depth();
-        milestones.forEach(function (m) {
-            if (d >= m && !fired[m]) {
+        var v = d();
+        ms.forEach(function (m) {
+            if (v >= m && !fired[m]) {
                 fired[m] = true;
-                if (typeof gtag === 'function') {
-                    gtag('event', 'scroll_depth', {
-                        event_category: 'engagement',
-                        event_label: m + '%',
-                        value: m
-                    });
-                }
+                if (typeof gtag === 'function') gtag('event', 'scroll_depth', { event_category: 'engagement', event_label: m + '%', value: m });
             }
         });
     }, { passive: true });
